@@ -9,7 +9,7 @@ declare global {
 }
 
 const func = async (): Promise<void> => {
-  const result = await window.electron.fetchUrl('https://google.com');
+  const result = await window.electron.fetchUrl('https://www.google.com');
   console.log(result?.data ?? 'Empty response');
 };
 

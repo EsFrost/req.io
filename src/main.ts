@@ -1,5 +1,9 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
+import { exec } from 'child_process';
+import { promisify } from 'util';
+
+const execAsync = promisify(exec);
 
 const createWindow = (): void => {
   const win = new BrowserWindow({
@@ -14,11 +18,13 @@ const createWindow = (): void => {
 };
 
 app.on('ready', () => {
-  ipcMain.handle('fetch-url', async (event, url: string) => {
+  ipcMain.handle('fetch-url', async (_event, url: string) => {
     try {
-      const response = await fetch(url);
-      const data = await response.text();
-      return { success: true, data };
+      const { stdout, stderr } = await execAsync(`curl -s "${url}"`);
+      if (stderr) {
+        return { success: false, error: stderr };
+      }
+      return { success: true, data: stdout };
     } catch (error) {
       return { success: false, error: (error as Error).message };
     }
