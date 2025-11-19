@@ -1,0 +1,16 @@
+{
+  "name": "reqio-electron",
+  "version": "1.0.0",
+  "description": "App to test API endpoints using curl and electron",
+  "license": "ISC",
+  "author": "Sigmund Frost",
+  "type": "commonjs",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "electron": "^39.2.2"
+  }
+}
