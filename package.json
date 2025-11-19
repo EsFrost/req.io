@@ -1,5 +1,5 @@
 {
-  "name": "reqio-electron",
+  "name": "req-rep.io-electron",
   "version": "1.0.0",
   "description": "App to test API endpoints using curl and electron",
   "license": "ISC",
