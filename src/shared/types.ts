@@ -48,7 +48,13 @@ export interface Request {
   updatedAt: number;
 }
 
-export interface Response {
+export interface FetchResponse {
+  success: boolean;
+  data?: string;
+  error?: string;
+}
+
+export interface HttpResponse {
   status: number;
   statusText: string;
   headers: Record<string, string>;
@@ -84,14 +90,14 @@ export interface Environment {
 export interface HistoryEntry {
   id: string;
   request: Request;
-  response: Response;
+  response: HttpResponse;
   timestamp: number;
 }
 
 export interface IpcChannels {
   'request:send': {
     args: [Request];
-    return: Response;
+    return: HttpResponse;
   };
   'collection:save': {
     args: [Collection];
@@ -108,5 +114,9 @@ export interface IpcChannels {
   'history:get': {
     args: [number?];
     return: HistoryEntry[];
+  };
+  'fetch-url': {
+    args: [string];
+    return: FetchResponse;
   };
 }
