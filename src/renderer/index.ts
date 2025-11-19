@@ -20,6 +20,27 @@ const statusCodeSpan = document.getElementById('status-code') as HTMLSpanElement
 let currentFormat: DisplayFormat = 'raw';
 let lastResponse: string = '';
 
+const getStatusText = (code: number): string => {
+  const statusTexts: Record<number, string> = {
+    200: 'OK',
+    201: 'Created',
+    204: 'No Content',
+    301: 'Moved Permanently',
+    302: 'Found',
+    304: 'Not Modified',
+    400: 'Bad Request',
+    401: 'Unauthorized',
+    403: 'Forbidden',
+    404: 'Not Found',
+    405: 'Method Not Allowed',
+    500: 'Internal Server Error',
+    502: 'Bad Gateway',
+    503: 'Service Unavailable',
+    504: 'Gateway Timeout'
+  };
+  return statusTexts[code] || 'Unknown';
+};
+
 const detectLanguage = (data: string): string => {
   const trimmed = data.trim();
   
@@ -113,10 +134,17 @@ formatSelect?.addEventListener('change', () => {
 fetchButton?.addEventListener('click', async () => {
   try {
     const response = await window.electron.fetchUrl(urlInput.value);
-    if (response.success) {
-      // Show status code (200 for successful curl response)
-      statusCodeSpan.textContent = '200 OK';
-      statusCodeSpan.className = 'text-green-400 font-semibold';
+    if (response.success && response.statusCode) {
+      const statusText = getStatusText(response.statusCode);
+      statusCodeSpan.textContent = `${response.statusCode} ${statusText}`;
+      
+      // Green for 2xx status codes, red for others
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        statusCodeSpan.className = 'text-green-400 font-semibold';
+      } else {
+        statusCodeSpan.className = 'text-red-400 font-semibold';
+      }
+      
       displayResponse(response.data || '');
     } else {
       // Show error status

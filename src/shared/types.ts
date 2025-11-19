@@ -52,6 +52,7 @@ export interface FetchResponse {
   success: boolean;
   data?: string;
   error?: string;
+  statusCode?: number;
 }
 
 export interface HttpResponse {
