@@ -1,5 +1,5 @@
 {
-  "name": "req-rep.io-electron",
+  "name": "reqio-electron",
   "version": "1.0.0",
   "description": "App to test API endpoints using curl and electron",
   "license": "ISC",
@@ -11,8 +11,8 @@
     "dev": "npm run watch:css & npm run watch:ts & electron .",
     "build:css": "tailwindcss -i ./src/input.css -o ./styles.css",
     "watch:css": "tailwindcss -i ./src/input.css -o ./styles.css --watch",
-    "build:ts": "tsc",
-    "watch:ts": "tsc --watch",
+    "build:ts": "tsc && tsc -p tsconfig.renderer.json",
+    "watch:ts": "tsc --watch & tsc -p tsconfig.renderer.json --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
