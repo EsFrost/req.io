@@ -4,12 +4,13 @@
     <meta charset="UTF-8" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'"
     />
     <title>Req.io Electron</title>
+    <link rel="stylesheet" href="./styles.css">
   </head>
-  <body>
-    <h1>Req.io</h1>
+  <body class="bg-gray-900 text-white p-8">
+    <h1 class="text-3xl font-bold">Req.io</h1>
   </body>
   <script src="./renderer.js"></script>
 </html>
