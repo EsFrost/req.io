@@ -7,10 +7,13 @@
       content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'"
     />
     <title>Req.io Electron</title>
-    <link rel="stylesheet" href="./styles.css">
+    <link href="./styles.css" rel="stylesheet">
   </head>
   <body class="bg-gray-900 text-white p-8">
     <h1 class="text-3xl font-bold">Req.io</h1>
+    <!-- <input type="text" id="url" placeholder="Enter URL">
+    <button id="fetch">Fetch</button>
+    <div id="result"></div> -->
   </body>
-  <script src="./renderer.js"></script>
+  <script type="module" src="./dist/renderer.js"></script>
 </html>
