@@ -15,6 +15,7 @@ declare global {
       getHistory: (limit?: number) => Promise<any[]>;
       clearHistory: () => Promise<void>;
       exportRequest: (request: Request) => Promise<void>;
+      importRequest: () => Promise<Request | null>;
     };
   }
 }
@@ -65,6 +66,7 @@ const authBearerPanel = document.getElementById('auth-bearer') as HTMLDivElement
 const authApiKeyPanel = document.getElementById('auth-apikey') as HTMLDivElement;
 
 const saveRequestBtn = document.getElementById('save-request') as HTMLButtonElement;
+const loadRequestBtn = document.getElementById('load-request') as HTMLButtonElement;
 const viewHistoryBtn = document.getElementById('view-history') as HTMLButtonElement;
 const historyModal = document.getElementById('history-modal') as HTMLDivElement;
 const historyContainer = document.getElementById('history-container') as HTMLDivElement;
@@ -550,6 +552,92 @@ saveRequestBtn?.addEventListener('click', async () => {
     await window.electron.exportRequest(request);
   } catch (error) {
     console.error('Failed to export request:', error);
+  }
+});
+
+// Load Request
+loadRequestBtn?.addEventListener('click', async () => {
+  try {
+    const request = await window.electron.importRequest();
+    
+    if (!request) {
+      return; // User cancelled or file was invalid
+    }
+    
+    // Populate URL
+    urlInput.value = request.url;
+    
+    // Set method
+    if (isHttpMethod(request.method)) {
+      currentMethod = request.method;
+      updateMethodButton();
+    }
+    
+    // Populate query params
+    queryParams = request.queryParams || [];
+    renderParams();
+    
+    // Populate headers
+    headers = request.headers || [];
+    renderHeaders();
+    
+    // Populate body
+    if (request.body) {
+      bodyTypeSelect.value = request.body.type;
+      bodyTypeSelect.dispatchEvent(new Event('change'));
+      
+      switch (request.body.type) {
+        case 'raw':
+        case 'x-www-form-urlencoded':
+          bodyRawTextarea.value = request.body.raw || '';
+          break;
+        case 'json':
+          bodyJsonTextarea.value = typeof request.body.json === 'string' 
+            ? request.body.json 
+            : JSON.stringify(request.body.json, null, 2);
+          break;
+        case 'form-data':
+          formFields = request.body.formData || [];
+          renderFormFields();
+          break;
+      }
+    } else {
+      bodyTypeSelect.value = 'none';
+      bodyTypeSelect.dispatchEvent(new Event('change'));
+    }
+    
+    // Populate auth
+    if (request.auth) {
+      authTypeSelect.value = request.auth.type;
+      authTypeSelect.dispatchEvent(new Event('change'));
+      
+      switch (request.auth.type) {
+        case 'basic':
+          if (request.auth.basic) {
+            (document.getElementById('auth-basic-username') as HTMLInputElement).value = request.auth.basic.username || '';
+            (document.getElementById('auth-basic-password') as HTMLInputElement).value = request.auth.basic.password || '';
+          }
+          break;
+        case 'bearer':
+          if (request.auth.bearer) {
+            (document.getElementById('auth-bearer-token') as HTMLInputElement).value = request.auth.bearer.token || '';
+          }
+          break;
+        case 'api-key':
+          if (request.auth.apiKey) {
+            (document.getElementById('auth-apikey-key') as HTMLInputElement).value = request.auth.apiKey.key || '';
+            (document.getElementById('auth-apikey-value') as HTMLInputElement).value = request.auth.apiKey.value || '';
+            (document.getElementById('auth-apikey-addto') as HTMLSelectElement).value = request.auth.apiKey.addTo || 'header';
+          }
+          break;
+      }
+    } else {
+      authTypeSelect.value = 'none';
+      authTypeSelect.dispatchEvent(new Event('change'));
+    }
+    
+  } catch (error) {
+    console.error('Failed to load request:', error);
   }
 });
 

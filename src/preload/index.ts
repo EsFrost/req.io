@@ -30,7 +30,9 @@ contextBridge.exposeInMainWorld('electron', {
   clearHistory: (): Promise<void> => 
     ipcRenderer.invoke('history:clear'),
   
-  // Export Request
+  // Export/Import Request
   exportRequest: (request: Request): Promise<void> => 
     ipcRenderer.invoke('request:export', request),
+  importRequest: (): Promise<Request | null> => 
+    ipcRenderer.invoke('request:import'),
 });

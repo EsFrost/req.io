@@ -45,6 +45,30 @@ export const registerHandlers = (): void => {
     }
   });
   
+  // Import request from JSON file
+  ipcMain.handle('request:import', async (): Promise<Request | null> => {
+    const { filePaths } = await dialog.showOpenDialog({
+      title: 'Import Request',
+      filters: [
+        { name: 'JSON Files', extensions: ['json'] }
+      ],
+      properties: ['openFile']
+    });
+    
+    if (filePaths && filePaths.length > 0) {
+      try {
+        const fileContent = fs.readFileSync(filePaths[0], 'utf-8');
+        const request = JSON.parse(fileContent) as Request;
+        return request;
+      } catch (error) {
+        console.error('Failed to parse request file:', error);
+        return null;
+      }
+    }
+    
+    return null;
+  });
+  
   // Collection management
   ipcMain.handle('collection:save', async (_event, collection: Collection): Promise<void> => {
     collectionStorage.save(collection);
