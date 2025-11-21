@@ -5,11 +5,22 @@
 @tailwind utilities;
 
 @layer components {
+  #result {
+    overflow: auto !important;
+    max-width: 100%;
+  }
+  
   #result pre {
-    @apply m-0 bg-transparent;
+    margin: 0 !important;
+    background: transparent !important;
+    width: max-content !important;
   }
   
   #result code {
-    @apply block p-4 rounded font-mono text-sm leading-relaxed;
+    display: block !important;
+    padding: 1rem !important;
+    white-space: pre !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
   }
 }

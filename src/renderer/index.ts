@@ -359,7 +359,17 @@ const displayResponse = (response: HttpResponse) => {
   resultDiv.innerHTML = '';
   
   const codeBlock = document.createElement('pre');
+  codeBlock.style.margin = '0';
+  codeBlock.style.width = '100%';
+  codeBlock.style.overflow = 'visible';
+  
   const codeElement = document.createElement('code');
+  codeElement.style.display = 'block';
+  codeElement.style.padding = '1rem';
+  codeElement.style.whiteSpace = 'pre';
+  codeElement.style.overflowWrap = 'normal';
+  codeElement.style.wordBreak = 'normal';
+  
   const data = response.body;
   
   switch (currentFormat) {
