@@ -43,7 +43,8 @@ export interface Request {
   body?: RequestBody;
   auth?: Auth;
   queryParams: KeyValue[];
-  collectionId?: string;
+  folderId?: string;
+  projectId?: string;
   createdAt: number;
   updatedAt: number;
 }
@@ -68,13 +69,29 @@ export interface HttpResponse {
 export interface Folder {
   id: string;
   name: string;
+  parentId?: string;
+  projectId: string;
   requests: Request[];
   subfolders: Folder[];
+  createdAt: number;
+  updatedAt: number;
 }
 
 export interface Collection {
   id: string;
   name: string;
+  folders: Folder[];
+  requests: Request[];
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface Project {
+  id: string;
+  name: string;
+  description?: string;
+  baseUrl?: string;
+  variables: KeyValue[];
   folders: Folder[];
   requests: Request[];
   createdAt: number;
@@ -107,6 +124,26 @@ export interface IpcChannels {
   'collection:load': {
     args: [];
     return: Collection[];
+  };
+  'project:save': {
+    args: [Project];
+    return: void;
+  };
+  'project:load': {
+    args: [];
+    return: Project[];
+  };
+  'project:delete': {
+    args: [string];
+    return: void;
+  };
+  'project:export': {
+    args: [Project];
+    return: void;
+  };
+  'project:import': {
+    args: [];
+    return: Project | null;
   };
   'environment:save': {
     args: [Environment];

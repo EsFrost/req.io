@@ -29,3 +29,7 @@
 - Create a branch for the website
 - Create a website for the app
 - Locally create the website files in a different folder to avoid conflicts and confusion
+
+## Localization :
+
+- Try to add localization

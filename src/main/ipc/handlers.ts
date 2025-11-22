@@ -1,15 +1,17 @@
 import { ipcMain, dialog } from 'electron';
-import { Request, HttpResponse, Collection, Environment, HistoryEntry } from '../../shared/types';
+import { Request, HttpResponse, Collection, Environment, HistoryEntry, Project } from '../../shared/types';
 import { RequestHandler } from './request-handler';
 import { CollectionStorage } from '../storage/collections';
 import { EnvironmentStorage } from '../storage/environments';
 import { HistoryStorage } from '../storage/history';
+import { ProjectStorage } from '../storage/projects';
 import * as fs from 'fs';
 
 const requestHandler = new RequestHandler();
 const collectionStorage = new CollectionStorage();
 const environmentStorage = new EnvironmentStorage();
 const historyStorage = new HistoryStorage();
+const projectStorage = new ProjectStorage();
 
 export const registerHandlers = (): void => {
   // Send HTTP request
@@ -80,6 +82,61 @@ export const registerHandlers = (): void => {
   
   ipcMain.handle('collection:delete', async (_event, id: string): Promise<void> => {
     collectionStorage.delete(id);
+  });
+  
+  // Project management
+  ipcMain.handle('project:save', async (_event, project: Project): Promise<void> => {
+    projectStorage.save(project);
+  });
+  
+  ipcMain.handle('project:load', async (): Promise<Project[]> => {
+    return projectStorage.loadAll();
+  });
+  
+  ipcMain.handle('project:delete', async (_event, id: string): Promise<void> => {
+    projectStorage.delete(id);
+  });
+  
+  // Export project to JSON file
+  ipcMain.handle('project:export', async (_event, project: Project): Promise<void> => {
+    const { filePath } = await dialog.showSaveDialog({
+      title: 'Export Project',
+      defaultPath: `${project.name || 'project'}.json`,
+      filters: [
+        { name: 'JSON Files', extensions: ['json'] }
+      ]
+    });
+    
+    if (filePath) {
+      const projectData = JSON.stringify(project, null, 2);
+      fs.writeFileSync(filePath, projectData, 'utf-8');
+    }
+  });
+  
+  // Import project from JSON file
+  ipcMain.handle('project:import', async (): Promise<Project | null> => {
+    const { filePaths } = await dialog.showOpenDialog({
+      title: 'Import Project',
+      filters: [
+        { name: 'JSON Files', extensions: ['json'] }
+      ],
+      properties: ['openFile']
+    });
+    
+    if (filePaths && filePaths.length > 0) {
+      try {
+        const fileContent = fs.readFileSync(filePaths[0], 'utf-8');
+        const project = JSON.parse(fileContent) as Project;
+        // Save imported project
+        projectStorage.save(project);
+        return project;
+      } catch (error) {
+        console.error('Failed to parse project file:', error);
+        return null;
+      }
+    }
+    
+    return null;
   });
   
   // Environment management

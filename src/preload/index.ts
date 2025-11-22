@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron';
-import { Request, HttpResponse, Collection, Environment, HistoryEntry } from '../shared/types';
+import { Request, HttpResponse, Collection, Environment, HistoryEntry, Project } from '../shared/types';
 
 contextBridge.exposeInMainWorld('electron', {
   // Request
@@ -13,6 +13,18 @@ contextBridge.exposeInMainWorld('electron', {
     ipcRenderer.invoke('collection:load'),
   deleteCollection: (id: string): Promise<void> => 
     ipcRenderer.invoke('collection:delete', id),
+  
+  // Projects
+  saveProject: (project: Project): Promise<void> => 
+    ipcRenderer.invoke('project:save', project),
+  loadProjects: (): Promise<Project[]> => 
+    ipcRenderer.invoke('project:load'),
+  deleteProject: (id: string): Promise<void> => 
+    ipcRenderer.invoke('project:delete', id),
+  exportProject: (project: Project): Promise<void> => 
+    ipcRenderer.invoke('project:export', project),
+  importProject: (): Promise<Project | null> => 
+    ipcRenderer.invoke('project:import'),
   
   // Environments
   saveEnvironment: (environment: Environment): Promise<void> => 
