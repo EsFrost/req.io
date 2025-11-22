@@ -168,6 +168,7 @@ document.getElementById('toggle-bearer-token')?.addEventListener('click', () => 
 const tabManager = new TabManager(tabsContainer, (tabId) => {
   loadTabById(tabId);
   renderSidebarUI();
+  renderSidebarUI();
 });
 
 // Project Functions
@@ -505,6 +506,9 @@ function loadProject(projectId: string): void {
 }
 
 function renderSidebarUI(): void {
+  const tab = tabManager.getActiveTab();
+  const activeRequestId = tab?.request.id;
+  
   const callbacks: SidebarCallbacks = {
     onNewFolder: () => openFolderForm(),
     onNewRequest: () => createRequestInProject(),
@@ -515,7 +519,7 @@ function renderSidebarUI(): void {
     onLoadRequest: (request) => loadRequestIntoTab(request)
   };
   
-  renderSidebar(sidebarContainer, currentProject, callbacks);
+  renderSidebar(sidebarContainer, currentProject, callbacks, activeRequestId);
 }
 
 function openFolderForm(parentId?: string): void {
