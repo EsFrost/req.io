@@ -10,6 +10,8 @@ import { renderProjectList, ProjectCallbacks } from './helpers/project-renderer'
 import { loadRequestIntoUI } from './helpers/request-loader';
 import { getBreadcrumbs, renderBreadcrumbs } from './helpers/breadcrumbs';
 import { getRequestContext, saveRequestToProject, updateRequestInProject } from './helpers/request-context';
+import { renderFolderTree } from './helpers/folder-tree';
+
 
 declare global {
   interface Window {
@@ -131,6 +133,15 @@ const folderNameInput = document.getElementById('folder-name-input') as HTMLInpu
 const saveFolderBtn = document.getElementById('save-folder') as HTMLButtonElement;
 const cancelFolderBtn = document.getElementById('cancel-folder') as HTMLButtonElement;
 
+// UI Elements - Folder Modal
+const selectFolderModal = document.getElementById('select-folder-modal') as HTMLDivElement;
+const selectProjectRoot = document.getElementById('select-project-root') as HTMLButtonElement;
+const folderTreeContainer = document.getElementById('folder-tree-container') as HTMLDivElement;
+const cancelFolderSelect = document.getElementById('cancel-folder-select') as HTMLButtonElement;
+
+// State for adding request
+let pendingRequestToAdd: Request | null = null;
+
 // Breadcrumbs
 const breadcrumbContainer = document.getElementById('breadcrumb-container') as HTMLDivElement;
 const addToProjectBtn = document.getElementById('add-to-project') as HTMLButtonElement;
@@ -176,14 +187,34 @@ function debouncedSaveCurrentTab(): void {
   }
   
   saveDebounceTimer = window.setTimeout(() => {
+    const tab = tabManager.getActiveTab();
+    if (!tab) return;
+    
+    const currentRequestContext = {
+      id: tab.request.id,
+      projectId: tab.request.projectId,
+      folderId: tab.request.folderId,
+      createdAt: tab.request.createdAt
+    };
+    
     saveCurrentTab();
-    markUnsavedChanges();
-    autoSaveProject();
+    
+    // Restore context after save to prevent breadcrumb flash
+    if (tab) {
+      tab.request.id = currentRequestContext.id;
+      tab.request.projectId = currentRequestContext.projectId;
+      tab.request.folderId = currentRequestContext.folderId;
+      tab.request.createdAt = currentRequestContext.createdAt;
+    }
+    
     saveDebounceTimer = null;
   }, 500);
 }
 
 function saveCurrentTab(): void {
+  const tab = tabManager.getActiveTab();
+  if (!tab) return;
+  
   const request = buildRequest(
     currentMethod,
     urlInput,
@@ -196,6 +227,12 @@ function saveCurrentTab(): void {
     authTypeSelect,
     currentProject?.id
   );
+  
+  // Preserve the original request ID and context
+  request.id = tab.request.id;
+  request.projectId = tab.request.projectId;
+  request.folderId = tab.request.folderId;
+  request.createdAt = tab.request.createdAt;
   
   tabManager.updateActiveTab(request, lastResponse);
   
@@ -219,31 +256,68 @@ addToProjectBtn?.addEventListener('click', () => {
   const tab = tabManager.getActiveTab();
   if (!tab) return;
   
-  // Show folder selection modal or add to root
-  const addToRoot = confirm('Add to project root? (Cancel to select a folder)');
+  pendingRequestToAdd = tab.request;
   
-  if (addToRoot) {
-    saveRequestToProject(tab.request, currentProject);
+  // Show folder selection modal
+  folderTreeContainer.innerHTML = '';
+  renderFolderTree(folderTreeContainer, currentProject.folders, (folderId) => {
+    if (pendingRequestToAdd) {
+      saveRequestToProject(pendingRequestToAdd, currentProject!, folderId);
+      markUnsavedChanges();
+      autoSaveProject();
+      renderSidebarUI();
+      
+      // Update the tab's request
+      tab.request.projectId = currentProject!.id;
+      tab.request.folderId = folderId;
+      updateBreadcrumbs(tab.request);
+      
+      selectFolderModal.classList.add('hidden');
+      pendingRequestToAdd = null;
+    }
+  });
+  
+  selectFolderModal.classList.remove('hidden');
+});
+
+selectProjectRoot?.addEventListener('click', () => {
+  if (pendingRequestToAdd && currentProject) {
+    saveRequestToProject(pendingRequestToAdd, currentProject);
     markUnsavedChanges();
     autoSaveProject();
     renderSidebarUI();
-    updateBreadcrumbs(tab.request);
-  } else {
-    // TODO: Implement folder selection modal
-    alert('Folder selection coming soon! Request added to project root.');
-    saveRequestToProject(tab.request, currentProject);
-    markUnsavedChanges();
-    autoSaveProject();
-    renderSidebarUI();
-    updateBreadcrumbs(tab.request);
+    
+    const tab = tabManager.getActiveTab();
+    if (tab) {
+      tab.request.projectId = currentProject.id;
+      tab.request.folderId = undefined;
+      updateBreadcrumbs(tab.request);
+    }
+    
+    selectFolderModal.classList.add('hidden');
+    pendingRequestToAdd = null;
   }
 });
 
-function updateBreadcrumbs(request: Request): void {
-  const context = getRequestContext(request);
+cancelFolderSelect?.addEventListener('click', () => {
+  selectFolderModal.classList.add('hidden');
+  pendingRequestToAdd = null;
+});
+
+function updateBreadcrumbs(request?: Request): void {
+  const tab = tabManager.getActiveTab();
+  const currentRequest = request || tab?.request;
   
-  if (context.isInProject && currentProject) {
-    const breadcrumbs = getBreadcrumbs(currentProject, request.folderId);
+  if (!currentRequest) {
+    breadcrumbContainer.innerHTML = '<span class="text-gray-500 text-sm">No request</span>';
+    addToProjectBtn.classList.add('hidden');
+    return;
+  }
+  
+  const context = getRequestContext(currentRequest);
+  
+  if (context.isInProject && currentProject && currentRequest.projectId === currentProject.id) {
+    const breadcrumbs = getBreadcrumbs(currentProject, currentRequest.folderId);
     renderBreadcrumbs(breadcrumbContainer, breadcrumbs);
     addToProjectBtn.classList.add('hidden');
   } else {
@@ -456,6 +530,7 @@ function createRequestInFolder(folderId: string): void {
 }
 
 function loadRequestIntoTab(request: Request): void {
+  const newTabId = tabManager.createTab({ ...request });
   const tab = tabManager.getActiveTab();
   if (tab) {
     tab.request = { ...request };

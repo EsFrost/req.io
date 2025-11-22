@@ -248,6 +248,24 @@
         </div>
       </div>
     </div>
+
+    <!-- Select Folder Modal -->
+    <div id="select-folder-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div class="bg-gray-900 rounded-lg p-6 max-w-md w-full mx-4 max-h-[60vh] overflow-hidden flex flex-col">
+        <h2 class="text-2xl font-bold mb-4">Select Folder</h2>
+        
+        <div class="flex-1 overflow-auto mb-4">
+          <button id="select-project-root" class="w-full bg-gray-800 hover:bg-gray-700 p-3 rounded mb-2 text-left">
+            📁 <span class="font-semibold">Project Root</span>
+          </button>
+          <div id="folder-tree-container"></div>
+        </div>
+        
+        <div class="flex gap-2 justify-end">
+          <button id="cancel-folder-select" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded">Cancel</button>
+        </div>
+      </div>
+    </div>
     
     <script type="module" src="./dist/renderer/index.js"></script>
   </body>
