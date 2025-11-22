@@ -12,8 +12,20 @@
   </head>
   <body class="bg-gray-900 text-white">
     <div class="flex h-screen">
+      <!-- Sidebar -->
+      <div class="w-64 bg-gray-800 p-4 overflow-y-auto border-r border-gray-700">
+        <div class="mb-4">
+          <h2 class="text-lg font-bold mb-2">Project</h2>
+          <div class="text-sm text-gray-400 mb-2" id="current-project-name">No Project</div>
+          <button id="project-dashboard" class="w-full bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded text-sm">
+            Projects
+          </button>
+        </div>
+        <div id="sidebar-container" class="mt-4"></div>
+      </div>
+
       <!-- Main Content -->
-      <div class="flex-1 flex flex-col p-6">
+      <div class="flex-1 flex flex-col p-6 overflow-hidden">
         <h1 class="text-3xl font-bold mb-4">Req-Rep.io</h1>
         
         <!-- Tabs Bar -->
@@ -41,7 +53,7 @@
               <div data-method="OPTIONS" class="px-4 py-2 text-purple-600 hover:bg-gray-700 cursor-pointer font-semibold">OPTIONS</div>
             </div>
           </div>
-          <input type="text" id="url" class="text-white bg-gray-800 p-2 rounded flex-1 border border-gray-700" placeholder="Enter URL">
+          <input type="text" id="url" class="text-white bg-gray-800 p-2 rounded flex-1 border border-gray-700" placeholder="Enter URL or use {{baseUrl}}">
           <button id="fetch" class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded font-semibold">Send</button>
           <button id="save-request" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded">Save</button>
           <button id="load-request" class="bg-orange-600 hover:bg-orange-700 px-4 py-2 rounded">Load</button>
@@ -157,6 +169,75 @@
           </div>
         </div>
         <div id="history-container" class="flex-1 overflow-auto"></div>
+      </div>
+    </div>
+
+    <!-- Project Modal -->
+    <div id="project-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div class="bg-gray-900 rounded-lg p-6 max-w-4xl w-full mx-4 max-h-[80vh] overflow-hidden flex flex-col">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-bold">Projects</h2>
+          <div class="flex gap-2">
+            <button id="import-project" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-sm">Import Project</button>
+            <button id="create-project" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-sm">Create Project</button>
+            <button id="close-project-modal" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+          </div>
+        </div>
+        <div id="project-list" class="flex-1 overflow-auto"></div>
+      </div>
+    </div>
+
+    <!-- Project Form Modal -->
+    <div id="project-form-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div class="bg-gray-900 rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-hidden flex flex-col">
+        <h2 id="project-form-title" class="text-2xl font-bold mb-4">Create New Project</h2>
+        
+        <div class="flex-1 overflow-auto mb-4">
+          <div class="mb-4">
+            <label class="block text-sm font-semibold mb-2">Project Name *</label>
+            <input type="text" id="project-name-input" class="w-full bg-gray-800 text-white p-2 rounded border border-gray-700" placeholder="My Project">
+          </div>
+          
+          <div class="mb-4">
+            <label class="block text-sm font-semibold mb-2">Description</label>
+            <textarea id="project-desc-input" class="w-full bg-gray-800 text-white p-2 rounded border border-gray-700" rows="3" placeholder="Project description"></textarea>
+          </div>
+          
+          <div class="mb-4">
+            <label class="block text-sm font-semibold mb-2">Base URL</label>
+            <input type="text" id="project-baseurl-input" class="w-full bg-gray-800 text-white p-2 rounded border border-gray-700" placeholder="http://localhost:8080">
+            <p class="text-xs text-gray-400 mt-1">Use {{baseUrl}} in your requests to reference this URL</p>
+          </div>
+          
+          <div class="mb-4">
+            <label class="block text-sm font-semibold mb-2">Environment Variables</label>
+            <div id="project-variables-container" class="mb-2"></div>
+            <button id="add-project-variable" class="bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded text-sm">+ Add Variable</button>
+            <p class="text-xs text-gray-400 mt-1">Use {{variableName}} in your requests</p>
+          </div>
+        </div>
+        
+        <div class="flex gap-2 justify-end">
+          <button id="cancel-project-form" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded">Cancel</button>
+          <button id="save-project-form" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">Save Project</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Folder Modal -->
+    <div id="folder-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div class="bg-gray-900 rounded-lg p-6 max-w-md w-full mx-4">
+        <h2 id="folder-modal-title" class="text-2xl font-bold mb-4">Create New Folder</h2>
+        
+        <div class="mb-4">
+          <label class="block text-sm font-semibold mb-2">Folder Name *</label>
+          <input type="text" id="folder-name-input" class="w-full bg-gray-800 text-white p-2 rounded border border-gray-700" placeholder="Authentication">
+        </div>
+        
+        <div class="flex gap-2 justify-end">
+          <button id="cancel-folder" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded">Cancel</button>
+          <button id="save-folder" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">Create Folder</button>
+        </div>
       </div>
     </div>
     
