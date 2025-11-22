@@ -26,10 +26,10 @@ export function loadRequestIntoUI(
   }
 ): void {
   // Populate URL
-  elements.urlInput.value = request.url;
+  elements.urlInput.value = request.url || '';
   
   // Set method
-  if (isHttpMethod(request.method)) {
+  if (request.method && isHttpMethod(request.method)) {
     setters.setMethod(request.method);
   }
   

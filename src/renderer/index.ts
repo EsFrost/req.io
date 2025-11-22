@@ -1,4 +1,3 @@
-import hljs from 'highlight.js';
 import { Request, HttpResponse, HttpMethod, KeyValue, Project } from '../shared/types';
 import { TabManager } from './helpers/tab-manager';
 import { replaceVariables } from './helpers/variable-replacer';
@@ -9,6 +8,8 @@ import { deleteFolder, deleteRequest, createFolder, createRequest, addFolderToPr
 import { renderSidebar, SidebarCallbacks } from './helpers/sidebar-renderer';
 import { renderProjectList, ProjectCallbacks } from './helpers/project-renderer';
 import { loadRequestIntoUI } from './helpers/request-loader';
+import { getBreadcrumbs, renderBreadcrumbs } from './helpers/breadcrumbs';
+import { getRequestContext, saveRequestToProject, updateRequestInProject } from './helpers/request-context';
 
 declare global {
   interface Window {
@@ -130,6 +131,10 @@ const folderNameInput = document.getElementById('folder-name-input') as HTMLInpu
 const saveFolderBtn = document.getElementById('save-folder') as HTMLButtonElement;
 const cancelFolderBtn = document.getElementById('cancel-folder') as HTMLButtonElement;
 
+// Breadcrumbs
+const breadcrumbContainer = document.getElementById('breadcrumb-container') as HTMLDivElement;
+const addToProjectBtn = document.getElementById('add-to-project') as HTMLButtonElement;
+
 // Tab Manager
 const tabManager = new TabManager(tabsContainer, (tabId) => {
   loadTabById(tabId);
@@ -193,6 +198,58 @@ function saveCurrentTab(): void {
   );
   
   tabManager.updateActiveTab(request, lastResponse);
+  
+  // Update request in project if it belongs to one
+  if (currentProject && request.projectId === currentProject.id) {
+    updateRequestInProject(request, currentProject);
+    markUnsavedChanges();
+  }
+  
+  // Update breadcrumbs
+  updateBreadcrumbs(request);
+}
+
+// Add to project button event listener
+addToProjectBtn?.addEventListener('click', () => {
+  if (!currentProject) {
+    alert('Please select a project first');
+    return;
+  }
+  
+  const tab = tabManager.getActiveTab();
+  if (!tab) return;
+  
+  // Show folder selection modal or add to root
+  const addToRoot = confirm('Add to project root? (Cancel to select a folder)');
+  
+  if (addToRoot) {
+    saveRequestToProject(tab.request, currentProject);
+    markUnsavedChanges();
+    autoSaveProject();
+    renderSidebarUI();
+    updateBreadcrumbs(tab.request);
+  } else {
+    // TODO: Implement folder selection modal
+    alert('Folder selection coming soon! Request added to project root.');
+    saveRequestToProject(tab.request, currentProject);
+    markUnsavedChanges();
+    autoSaveProject();
+    renderSidebarUI();
+    updateBreadcrumbs(tab.request);
+  }
+});
+
+function updateBreadcrumbs(request: Request): void {
+  const context = getRequestContext(request);
+  
+  if (context.isInProject && currentProject) {
+    const breadcrumbs = getBreadcrumbs(currentProject, request.folderId);
+    renderBreadcrumbs(breadcrumbContainer, breadcrumbs);
+    addToProjectBtn.classList.add('hidden');
+  } else {
+    breadcrumbContainer.innerHTML = '<span class="text-gray-500 text-sm">Not in any project</span>';
+    addToProjectBtn.classList.remove('hidden');
+  }
 }
 
 function loadTabById(tabId: string): void {
@@ -226,6 +283,9 @@ function loadTabById(tabId: string): void {
       setFormFields: (fields) => { formFields = fields; }
     }
   );
+  
+  // Update breadcrumbs
+  updateBreadcrumbs(tab.request);
   
   if (tab.response) {
     lastResponse = tab.response;
