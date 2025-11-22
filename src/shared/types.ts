@@ -6,6 +6,7 @@ export interface KeyValue {
   key: string;
   value: string;
   enabled: boolean;
+  sensitive?: boolean;
 }
 
 export interface Auth {
@@ -20,6 +21,22 @@ export interface Auth {
   apiKey?: {
     key: string;
     value: string;
+    addTo: 'header' | 'query';
+  };
+}
+
+export interface SecureAuth {
+  type: AuthType;
+  basic?: {
+    username: string;
+    password: string; // base64 encrypted
+  };
+  bearer?: {
+    token: string; // base64 encrypted
+  };
+  apiKey?: {
+    key: string;
+    value: string; // base64 encrypted
     addTo: 'header' | 'query';
   };
 }

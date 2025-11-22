@@ -5,13 +5,15 @@ import { CollectionStorage } from '../storage/collections';
 import { EnvironmentStorage } from '../storage/environments';
 import { HistoryStorage } from '../storage/history';
 import { ProjectStorage } from '../storage/projects';
+import { SecureProjectStorage } from '../storage/secure-projects';
 import * as fs from 'fs';
 
 const requestHandler = new RequestHandler();
 const collectionStorage = new CollectionStorage();
 const environmentStorage = new EnvironmentStorage();
 const historyStorage = new HistoryStorage();
-const projectStorage = new ProjectStorage();
+// const projectStorage = new ProjectStorage();
+const projectStorage = new SecureProjectStorage();
 
 export const registerHandlers = (): void => {
   // Send HTTP request

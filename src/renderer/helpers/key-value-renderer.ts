@@ -5,7 +5,9 @@ export function createKeyValueRow(
   value: string = '',
   enabled: boolean = true,
   onDelete: () => void,
-  onChange?: () => void
+  onChange?: () => void,
+  sensitive: boolean = false, // NEW parameter
+  showSensitiveToggle: boolean = false // NEW parameter
 ): HTMLDivElement {
   const row = document.createElement('div');
   row.className = 'flex gap-2 items-center mb-2';
@@ -28,12 +30,32 @@ export function createKeyValueRow(
   }
   
   const valueInput = document.createElement('input');
-  valueInput.type = 'text';
+  valueInput.type = sensitive ? 'password' : 'text';
   valueInput.value = value;
   valueInput.placeholder = 'Value';
   valueInput.className = 'flex-1 bg-gray-800 text-white p-2 rounded border border-gray-700';
   if (onChange) {
     valueInput.addEventListener('input', onChange);
+  }
+  
+  // Add sensitive toggle if needed
+  if (showSensitiveToggle) {
+    const sensitiveBtn = document.createElement('button');
+    sensitiveBtn.type = 'button';
+    sensitiveBtn.className = sensitive 
+      ? 'bg-yellow-600 hover:bg-yellow-700 px-3 py-2 rounded text-xl'
+      : 'bg-gray-600 hover:bg-gray-700 px-3 py-2 rounded text-xl';
+    sensitiveBtn.textContent = '🔒';
+    sensitiveBtn.title = 'Mark as sensitive (encrypted storage)';
+    sensitiveBtn.onclick = () => {
+      const newSensitive = !sensitive;
+      sensitiveBtn.className = newSensitive
+        ? 'bg-yellow-600 hover:bg-yellow-700 px-3 py-2 rounded text-xl'
+        : 'bg-gray-600 hover:bg-gray-700 px-3 py-2 rounded text-xl';
+      valueInput.type = newSensitive ? 'password' : 'text';
+      if (onChange) onChange();
+    };
+    row.appendChild(sensitiveBtn);
   }
   
   const deleteBtn = document.createElement('button');

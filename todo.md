@@ -10,7 +10,6 @@
 ## functionality :
 
 - Add support for cookies
-- Secure tokens
 
 ## UI :
 
