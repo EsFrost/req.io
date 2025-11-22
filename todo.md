@@ -22,7 +22,7 @@
 - Fix any UI elements that are not working / bugging
 
 - Can't use the url input after closing a tab
-- Icons are squeezed
+- Icons are squeezed (sometimes)
 
 ## Website :
 
