@@ -125,6 +125,10 @@ export interface IpcChannels {
     args: [];
     return: Collection[];
   };
+  'collection:delete': {
+    args: [string];
+    return: void;
+  };
   'project:save': {
     args: [Project];
     return: void;
@@ -149,9 +153,33 @@ export interface IpcChannels {
     args: [Environment];
     return: void;
   };
+  'environment:load': {
+    args: [];
+    return: Environment[];
+  };
+  'environment:delete': {
+    args: [string];
+    return: void;
+  };
+  'environment:setActive': {
+    args: [string];
+    return: void;
+  };
   'history:get': {
     args: [number?];
     return: HistoryEntry[];
+  };
+  'history:clear': {
+    args: [];
+    return: void;
+  };
+  'request:export': {
+    args: [Request];
+    return: void;
+  };
+  'request:import': {
+    args: [];
+    return: Request | null;
   };
   'fetch-url': {
     args: [string];
