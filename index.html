@@ -54,10 +54,64 @@
             </div>
           </div>
           <input type="text" id="url" class="text-white bg-gray-800 p-2 rounded flex-1 border border-gray-700" placeholder="Enter URL or use {{baseUrl}}">
-          <button id="fetch" class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded font-semibold">Send</button>
-          <button id="save-request" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded">Save</button>
-          <button id="load-request" class="bg-orange-600 hover:bg-orange-700 px-4 py-2 rounded">Load</button>
-          <button id="view-history" class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded">History</button>
+          <button id="fetch" class="font-semibold
+                overflow-hidden border border-gray-400 rounded-md px-4 py-2 text-lg cursor-pointer
+                bg-[rgba(102,156,255,0.3)]
+                backdrop-blur-xs
+                shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_5px_2.5px_rgba(255,255,255,0.25)]
+                transition-all duration-500 ease-in-out
+                hover:backdrop-blur-md
+                hover:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_10px_5px_rgba(255,255,255,0.5)]
+                before:content-[''] before:absolute before:top-0 before:left-[-100%] before:w-[50%] before:h-full
+                before:bg-gradient-to-r before:from-transparent before:via-white/40 before:to-transparent
+                before:skew-x-[-25deg]
+                before:transition-all before:duration-500 before:ease-in-out
+                hover:before:left-[150%]
+                active:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_15px_7.5px_rgba(255,255,255,0.75)]
+                active:duration-10
+          ">Send</button>
+          <button id="save-request" class="overflow-hidden border border-gray-400 rounded-md px-4 py-2 text-lg cursor-pointer
+                bg-[rgba(121,255,132,0.3)]
+                backdrop-blur-xs
+                shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_5px_2.5px_rgba(255,255,255,0.25)]
+                transition-all duration-500 ease-in-out
+                hover:backdrop-blur-md
+                hover:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_10px_5px_rgba(255,255,255,0.5)]
+                before:content-[''] before:absolute before:top-0 before:left-[-100%] before:w-[50%] before:h-full
+                before:bg-gradient-to-r before:from-transparent before:via-white/40 before:to-transparent
+                before:skew-x-[-25deg]
+                before:transition-all before:duration-500 before:ease-in-out
+                hover:before:left-[150%]
+                active:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_15px_7.5px_rgba(255,255,255,0.75)]
+                active:duration-10">Save</button>
+          <button id="load-request" class="overflow-hidden border border-gray-400 rounded-md px-4 py-2 text-lg cursor-pointer
+                bg-[rgba(255,178,131,0.3)]
+                backdrop-blur-xs
+                shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_5px_2.5px_rgba(255,255,255,0.25)]
+                transition-all duration-500 ease-in-out
+                hover:backdrop-blur-md
+                hover:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_10px_5px_rgba(255,255,255,0.5)]
+                before:content-[''] before:absolute before:top-0 before:left-[-100%] before:w-[50%] before:h-full
+                before:bg-gradient-to-r before:from-transparent before:via-white/40 before:to-transparent
+                before:skew-x-[-25deg]
+                before:transition-all before:duration-500 before:ease-in-out
+                hover:before:left-[150%]
+                active:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_15px_7.5px_rgba(255,255,255,0.75)]
+                active:duration-10">Load</button>
+          <button id="view-history" class="overflow-hidden border border-gray-400 rounded-md px-4 py-2 text-lg cursor-pointer
+                bg-[rgba(192,131,255,0.3)]
+                backdrop-blur-xs
+                shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_5px_2.5px_rgba(255,255,255,0.25)]
+                transition-all duration-500 ease-in-out
+                hover:backdrop-blur-md
+                hover:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_10px_5px_rgba(255,255,255,0.5)]
+                before:content-[''] before:absolute before:top-0 before:left-[-100%] before:w-[50%] before:h-full
+                before:bg-gradient-to-r before:from-transparent before:via-white/40 before:to-transparent
+                before:skew-x-[-25deg]
+                before:transition-all before:duration-500 before:ease-in-out
+                hover:before:left-[150%]
+                active:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_15px_7.5px_rgba(255,255,255,0.75)]
+                active:duration-10">History</button>
         </div>
 
         <!-- Breadcrumbs and Context -->
