@@ -43,7 +43,6 @@
         <!-- URL Bar -->
         <div class="mb-4 flex items-center gap-3">
           <div class="relative">
-            <!--Change the UI to glass here-->
             <button id="method-button" class="text-green-600 font-semibold px-4 py-2 rounded cursor-pointer min-w-[120px] text-left flex items-center justify-between gap-3 bg-[rgba(7,14,29,0.7)] hover:bg-[rgba(7,14,29,0.9)] transition-all duration-300 border border-gray-700">
               <span id="method-text">GET</span>
               <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="#A9AEC1" viewBox="0 0 24 24">
@@ -60,13 +59,7 @@
               <div data-method="OPTIONS" class="px-4 py-2 text-purple-600 hover:bg-gray-700 cursor-pointer font-semibold">OPTIONS</div>
             </div>
           </div>
-          <input type="text" id="url" class="text-white p-2 min-w-[15rem]
-                                              overflow-hidden border border-gray-400 rounded-md px-4 py-2
-                                              bg-[rgba(17,24,39,0.3)]
-                                              backdrop-blur-xs
-                                              shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_5px_2.5px_rgba(255,255,255,0.25)]
-                                              transition-all duration-500 ease-in-out
-                                              hover:backdrop-blur-md" placeholder="Enter URL or use {{baseUrl}}">
+          <input type="text" id="url" class="text-white p-2 min-w-[15rem] bg-[rgba(7,14,29,0.7)] rounded-md" placeholder="Enter URL or use {{baseUrl}}">
           <button id="fetch" class="font-semibold
                 overflow-hidden border border-gray-400 rounded-md px-4 py-2 text-lg cursor-pointer
                 bg-[rgba(17,24,39,0.3)]
@@ -255,13 +248,13 @@
           <div id="auth-none" class="text-gray-400">This request does not use any authorization.</div>
           
           <div id="auth-basic" class="hidden space-y-3">
-            <input type="text" id="auth-basic-username" class="w-full bg-gray-800 text-white p-2 rounded border border-gray-700" placeholder="Username">
-            <input type="password" id="auth-basic-password" class="w-full bg-gray-800 text-white p-2 rounded border border-gray-700" placeholder="Password">
+            <input type="text" id="auth-basic-username" class="w-full bg-[rgba(7,14,29,0.7)] text-white p-2 rounded border border-gray-700" placeholder="Username">
+            <input type="password" id="auth-basic-password" class="w-full bg-[rgba(7,14,29,0.7)] text-white p-2 rounded border border-gray-700" placeholder="Password">
           </div>
           
           <div id="auth-bearer" class="hidden">
             <div class="relative">
-              <input type="password" id="auth-bearer-token" class="w-full bg-gray-800 text-white p-2 pr-10 rounded border border-gray-700" placeholder="Token">
+              <input type="password" id="auth-bearer-token" class="w-full bg-[rgba(7,14,29,0.7)] text-white p-2 pr-10 rounded border border-gray-700" placeholder="Token">
               <button type="button" id="toggle-bearer-token" class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white">
                 <svg id="bearer-eye-closed" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>
@@ -275,9 +268,9 @@
           </div>
           
           <div id="auth-apikey" class="hidden space-y-3">
-            <input type="text" id="auth-apikey-key" class="w-full bg-gray-800 text-white p-2 rounded border border-gray-700" placeholder="Key">
-            <input type="text" id="auth-apikey-value" class="w-full bg-gray-800 text-white p-2 rounded border border-gray-700" placeholder="Value">
-            <select id="auth-apikey-addto" class="w-full bg-gray-800 text-white p-2 rounded border border-gray-700">
+            <input type="text" id="auth-apikey-key" class="w-full bg-[rgba(7,14,29,0.7)] text-white p-2 rounded border border-gray-700" placeholder="Key">
+            <input type="text" id="auth-apikey-value" class="w-full bg-[rgba(7,14,29,0.7)] text-white p-2 rounded border border-gray-700" placeholder="Value">
+            <select id="auth-apikey-addto" class="w-full bg-[rgba(7,14,29,0.7)] text-white p-2 rounded border border-gray-700">
               <option value="header">Add to Header</option>
               <option value="query">Add to Query Params</option>
             </select>
