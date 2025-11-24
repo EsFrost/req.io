@@ -15,13 +15,13 @@ export function renderProjectList(
   container.innerHTML = '';
   
   if (projects.length === 0) {
-    container.innerHTML = '<div class="text-gray-400 text-center py-8">No projects yet. Create one to get started!</div>';
+    container.innerHTML = '<div class="text-gray-400 text-center py-8 bg-[rgba(7,14,29,0.7)]">No projects yet. Create one to get started!</div>';
     return;
   }
   
   projects.forEach(project => {
     const projectCard = document.createElement('div');
-    projectCard.className = 'bg-gray-800 p-4 rounded mb-3 hover:bg-gray-750 cursor-pointer';
+    projectCard.className = 'bg-[rgba(7,14,29,0.7)] p-4 rounded mb-3 hover:bg-gray-750 cursor-pointer';
     
     projectCard.innerHTML = `
       <div class="flex justify-between items-start mb-2">
@@ -31,9 +31,48 @@ export function renderProjectList(
           ${project.baseUrl ? `<p class="text-xs text-blue-400">Base URL: ${project.baseUrl}</p>` : ''}
         </div>
         <div class="flex gap-2">
-          <button class="edit-project bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm">Edit</button>
-          <button class="export-project bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-sm">Export</button>
-          <button class="delete-project bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-sm">Delete</button>
+          <button class="edit-project px-3 py-1 text-sm overflow-hidden border border-gray-400 rounded-md px-4 py-2 text-lg cursor-pointer relative
+                bg-[rgba(17,24,39,0.3)]
+                backdrop-blur-xs
+                shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_5px_2.5px_rgba(255,255,255,0.25)]
+                transition-all duration-500 ease-in-out
+                hover:backdrop-blur-md
+                hover:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_10px_5px_rgba(255,255,255,0.5)]
+                before:content-[''] before:absolute before:top-0 before:left-[-100%] before:w-[50%] before:h-full
+                before:bg-gradient-to-r before:from-transparent before:via-white/40 before:to-transparent
+                before:skew-x-[-25deg]
+                before:transition-all before:duration-500 before:ease-in-out
+                hover:before:left-[150%]
+                active:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_15px_7.5px_rgba(255,255,255,0.75)]
+                active:duration-10">Edit</button>
+          <button class="export-project px-3 py-1 overflow-hidden border border-gray-400 rounded-md px-4 py-2 text-lg cursor-pointer relative
+                bg-[rgba(17,24,39,0.3)]
+                backdrop-blur-xs
+                shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_5px_2.5px_rgba(255,255,255,0.25)]
+                transition-all duration-500 ease-in-out
+                hover:backdrop-blur-md
+                hover:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_10px_5px_rgba(255,255,255,0.5)]
+                before:content-[''] before:absolute before:top-0 before:left-[-100%] before:w-[50%] before:h-full
+                before:bg-gradient-to-r before:from-transparent before:via-white/40 before:to-transparent
+                before:skew-x-[-25deg]
+                before:transition-all before:duration-500 before:ease-in-out
+                hover:before:left-[150%]
+                active:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_15px_7.5px_rgba(255,255,255,0.75)]
+                active:duration-10 text-sm">Export</button>
+          <button class="delete-project px-3 py-1 overflow-hidden border border-gray-400 rounded-md px-4 py-2 text-lg cursor-pointer relative
+                bg-[rgba(17,24,39,0.3)]
+                backdrop-blur-xs
+                shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_5px_2.5px_rgba(255,255,255,0.25)]
+                transition-all duration-500 ease-in-out
+                hover:backdrop-blur-md
+                hover:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_10px_5px_rgba(255,255,255,0.5)]
+                before:content-[''] before:absolute before:top-0 before:left-[-100%] before:w-[50%] before:h-full
+                before:bg-gradient-to-r before:from-transparent before:via-white/40 before:to-transparent
+                before:skew-x-[-25deg]
+                before:transition-all before:duration-500 before:ease-in-out
+                hover:before:left-[150%]
+                active:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_15px_7.5px_rgba(255,255,255,0.75)]
+                active:duration-10 text-sm">Delete</button>
         </div>
       </div>
       <div class="text-xs text-gray-500">
