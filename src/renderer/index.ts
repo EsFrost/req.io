@@ -424,7 +424,7 @@ function switchTab(tab: TabType) {
   currentTab = tab;
   
   [paramsTab, headersTab, bodyTab, authTab].forEach(t => {
-    t.classList.remove('border-blue-500', 'text-blue-500');
+    t.classList.remove('border-blue-500', 'text-white');
     t.classList.add('border-transparent', 'text-gray-400');
   });
   
@@ -432,22 +432,22 @@ function switchTab(tab: TabType) {
   
   switch (tab) {
     case 'params':
-      paramsTab.classList.add('border-blue-500', 'text-blue-500');
+      paramsTab.classList.add('border-blue-500', 'text-white');
       paramsTab.classList.remove('text-gray-400');
       paramsPanel.classList.remove('hidden');
       break;
     case 'headers':
-      headersTab.classList.add('border-blue-500', 'text-blue-500');
+      headersTab.classList.add('border-blue-500', 'text-white');
       headersTab.classList.remove('text-gray-400');
       headersPanel.classList.remove('hidden');
       break;
     case 'body':
-      bodyTab.classList.add('border-blue-500', 'text-blue-500');
+      bodyTab.classList.add('border-blue-500', 'text-white');
       bodyTab.classList.remove('text-gray-400');
       bodyPanel.classList.remove('hidden');
       break;
     case 'auth':
-      authTab.classList.add('border-blue-500', 'text-blue-500');
+      authTab.classList.add('border-blue-500', 'text-white');
       authTab.classList.remove('text-gray-400');
       authPanel.classList.remove('hidden');
       break;
