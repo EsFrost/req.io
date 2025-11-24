@@ -94,8 +94,8 @@ export class TabManager {
     
     this.tabs.forEach(tab => {
       const tabElement = document.createElement('div');
-      tabElement.className = `flex items-center gap-2 px-4 py-2 rounded-t cursor-pointer ${
-        this.activeTabId === tab.id ? 'bg-gray-800 text-white' : 'bg-gray-700 text-gray-400 hover:bg-gray-750'
+      tabElement.className = `flex items-center gap-2 px-4 py-2 rounded-t cursor-pointer transition-all duration-300 ${
+        this.activeTabId === tab.id ? 'bg-[rgba(7,14,29,0.7)] text-white hover:bg-[rgba(7,14,29,0.9)]' : 'bg-gray-700 text-gray-400 hover:bg-[rgba(7,14,29,0.9)]'
       }`;
       
       const tabName = document.createElement('span');
