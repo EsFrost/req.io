@@ -23,7 +23,20 @@
         <div class="mb-4">
           <h2 class="text-lg font-bold mb-2">Project</h2>
           <div class="text-sm text-gray-400 mb-2" id="current-project-name">No Project</div>
-          <button id="project-dashboard" class="w-full bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded text-sm">
+          <button id="project-dashboard" class="w-full px-3 py-2 text-sm overflow-hidden border border-gray-400 rounded-md px-4 py-2 text-lg cursor-pointer relative
+                bg-[rgba(17,24,39,0.3)]
+                backdrop-blur-xs
+                shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_5px_2.5px_rgba(255,255,255,0.25)]
+                transition-all duration-500 ease-in-out
+                hover:backdrop-blur-md
+                hover:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_10px_5px_rgba(255,255,255,0.5)]
+                before:content-[''] before:absolute before:top-0 before:left-[-100%] before:w-[50%] before:h-full
+                before:bg-gradient-to-r before:from-transparent before:via-white/40 before:to-transparent
+                before:skew-x-[-25deg]
+                before:transition-all before:duration-500 before:ease-in-out
+                hover:before:left-[150%]
+                active:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_15px_7.5px_rgba(255,255,255,0.75)]
+                active:duration-10">
             Projects
           </button>
         </div>
@@ -331,9 +344,35 @@
           <!--Change the UI to glass here-->
           <div class="flex gap-2">
             <!--Change the UI to glass here-->
-            <button id="import-project" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-sm">Import Project</button>
+            <button id="import-project" class="px-4 py-2 text-sm overflow-hidden border border-gray-400 rounded-md px-4 py-2 text-lg cursor-pointer relative
+                bg-[rgba(17,24,39,0.3)]
+                backdrop-blur-xs
+                shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_5px_2.5px_rgba(255,255,255,0.25)]
+                transition-all duration-500 ease-in-out
+                hover:backdrop-blur-md
+                hover:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_10px_5px_rgba(255,255,255,0.5)]
+                before:content-[''] before:absolute before:top-0 before:left-[-100%] before:w-[50%] before:h-full
+                before:bg-gradient-to-r before:from-transparent before:via-white/40 before:to-transparent
+                before:skew-x-[-25deg]
+                before:transition-all before:duration-500 before:ease-in-out
+                hover:before:left-[150%]
+                active:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_15px_7.5px_rgba(255,255,255,0.75)]
+                active:duration-10">Import Project</button>
             <!--Change the UI to glass here-->
-            <button id="create-project" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-sm">Create Project</button>
+            <button id="create-project" class="px-4 py-2 text-sm overflow-hidden border border-gray-400 rounded-md px-4 py-2 text-lg cursor-pointer relative
+                bg-[rgba(17,24,39,0.3)]
+                backdrop-blur-xs
+                shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_5px_2.5px_rgba(255,255,255,0.25)]
+                transition-all duration-500 ease-in-out
+                hover:backdrop-blur-md
+                hover:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_10px_5px_rgba(255,255,255,0.5)]
+                before:content-[''] before:absolute before:top-0 before:left-[-100%] before:w-[50%] before:h-full
+                before:bg-gradient-to-r before:from-transparent before:via-white/40 before:to-transparent
+                before:skew-x-[-25deg]
+                before:transition-all before:duration-500 before:ease-in-out
+                hover:before:left-[150%]
+                active:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_15px_7.5px_rgba(255,255,255,0.75)]
+                active:duration-10">Create Project</button>
             <!--Change the UI to glass here-->
             <button id="close-project-modal" class="text-gray-400 hover:text-white text-2xl">&times;</button>
           </div>
@@ -351,35 +390,71 @@
           <div class="mb-4">
             <label class="block text-sm font-semibold mb-2">Project Name *</label>
             <!--Change the UI to glass here-->
-            <input type="text" id="project-name-input" class="w-full bg-gray-800 text-white p-2 rounded border border-gray-700" placeholder="My Project">
+            <input type="text" id="project-name-input" class="w-full bg-[rgba(7,14,29,0.7)] text-white p-2 rounded border border-gray-700" placeholder="My Project">
           </div>
           
           <div class="mb-4">
             <label class="block text-sm font-semibold mb-2">Description</label>
             <!--Change the UI to glass here-->
-            <textarea id="project-desc-input" class="w-full bg-gray-800 text-white p-2 rounded border border-gray-700" rows="3" placeholder="Project description"></textarea>
+            <textarea id="project-desc-input" class="w-full bg-[rgba(7,14,29,0.7)] text-white p-2 rounded border border-gray-700" rows="3" placeholder="Project description"></textarea>
           </div>
           
           <div class="mb-4">
             <label class="block text-sm font-semibold mb-2">Base URL</label>
-            <!--Change the UI to glass here-->
-            <input type="text" id="project-baseurl-input" class="w-full bg-gray-800 text-white p-2 rounded border border-gray-700" placeholder="http://localhost:8080">
+            <input type="text" id="project-baseurl-input" class="w-full bg-[rgba(7,14,29,0.7)] text-white p-2 rounded border border-gray-700" placeholder="http://localhost:8080">
             <p class="text-xs text-gray-400 mt-1">Use {{baseUrl}} in your requests to reference this URL</p>
           </div>
           
           <div class="mb-4">
             <label class="block text-sm font-semibold mb-2">Environment Variables</label>
             <div id="project-variables-container" class="mb-2"></div>
-            <!--Change the UI to glass here-->
-            <button id="add-project-variable" class="bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded text-sm">+ Add Variable</button>
-            <!--Change the UI to glass here-->
+            <button id="add-project-variable" class="px-4 py-2 text-sm overflow-hidden border border-gray-400 rounded-md px-4 py-2 text-lg cursor-pointer relative
+                bg-[rgba(17,24,39,0.3)]
+                backdrop-blur-xs
+                shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_5px_2.5px_rgba(255,255,255,0.25)]
+                transition-all duration-500 ease-in-out
+                hover:backdrop-blur-md
+                hover:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_10px_5px_rgba(255,255,255,0.5)]
+                before:content-[''] before:absolute before:top-0 before:left-[-100%] before:w-[50%] before:h-full
+                before:bg-gradient-to-r before:from-transparent before:via-white/40 before:to-transparent
+                before:skew-x-[-25deg]
+                before:transition-all before:duration-500 before:ease-in-out
+                hover:before:left-[150%]
+                active:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_15px_7.5px_rgba(255,255,255,0.75)]
+                active:duration-10">+ Add Variable</button>
             <p class="text-xs text-gray-400 mt-1">Use {{variableName}} in your requests. Mark sensitive data (tokens, passwords) with the lock icon.</p>
           </div>
         </div>
         
         <div class="flex gap-2 justify-end">
-          <button id="cancel-project-form" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded">Cancel</button>
-          <button id="save-project-form" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">Save Project</button>
+          <button id="cancel-project-form" class="px-4 py-2 overflow-hidden border border-gray-400 rounded-md px-4 py-2 text-lg cursor-pointer relative
+                bg-[rgba(17,24,39,0.3)]
+                backdrop-blur-xs
+                shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_5px_2.5px_rgba(255,255,255,0.25)]
+                transition-all duration-500 ease-in-out
+                hover:backdrop-blur-md
+                hover:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_10px_5px_rgba(255,255,255,0.5)]
+                before:content-[''] before:absolute before:top-0 before:left-[-100%] before:w-[50%] before:h-full
+                before:bg-gradient-to-r before:from-transparent before:via-white/40 before:to-transparent
+                before:skew-x-[-25deg]
+                before:transition-all before:duration-500 before:ease-in-out
+                hover:before:left-[150%]
+                active:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_15px_7.5px_rgba(255,255,255,0.75)]
+                active:duration-10">Cancel</button>
+          <button id="save-project-form" class="px-4 py-2 overflow-hidden border border-gray-400 rounded-md px-4 py-2 text-lg cursor-pointer relative
+                bg-[rgba(17,24,39,0.3)]
+                backdrop-blur-xs
+                shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_5px_2.5px_rgba(255,255,255,0.25)]
+                transition-all duration-500 ease-in-out
+                hover:backdrop-blur-md
+                hover:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_10px_5px_rgba(255,255,255,0.5)]
+                before:content-[''] before:absolute before:top-0 before:left-[-100%] before:w-[50%] before:h-full
+                before:bg-gradient-to-r before:from-transparent before:via-white/40 before:to-transparent
+                before:skew-x-[-25deg]
+                before:transition-all before:duration-500 before:ease-in-out
+                hover:before:left-[150%]
+                active:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_15px_7.5px_rgba(255,255,255,0.75)]
+                active:duration-10">Save Project</button>
         </div>
       </div>
     </div>
