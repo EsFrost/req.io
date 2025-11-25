@@ -31,5 +31,3 @@
 ## Problems : <- Start here
 
 - Opening a new tab while having selected a project puts it automatically in the project
-
-- On adding fields the previous ones go away
