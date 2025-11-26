@@ -73,6 +73,17 @@ export interface FetchResponse {
   statusCode?: number;
 }
 
+export interface NetworkInfo {
+  httpVersion?: string;
+  localAddress?: string;
+  remoteAddress?: string;
+  tlsProtocol?: string;
+  cipherName?: string;
+  certificateCN?: string;
+  issuerCN?: string;
+  validUntil?: string;
+}
+
 export interface HttpResponse {
   status: number;
   statusText: string;
@@ -81,6 +92,7 @@ export interface HttpResponse {
   time: number;
   size: number;
   timestamp: number;
+  networkInfo?: NetworkInfo;
 }
 
 export interface Folder {

@@ -1,4 +1,4 @@
-import { Request, HttpResponse, HttpMethod, KeyValue, Project } from '../shared/types';
+import { Request, HttpResponse, HttpMethod, KeyValue, Project, NetworkInfo } from '../shared/types';
 import { TabManager } from './helpers/tab-manager';
 import { replaceVariables } from './helpers/variable-replacer';
 import { DisplayFormat, displayResponse } from './helpers/response-handler';
@@ -151,6 +151,39 @@ const addToProjectBtn = document.getElementById('add-to-project') as HTMLButtonE
 const hamburgerIcon = document.getElementById('hamburger-icon');
 const closeIcon = document.getElementById('close-icon');
 let menuVisible = false;
+
+// Network info modal
+const networkInfoBtn = document.getElementById('network-info-btn') as HTMLButtonElement;
+const networkInfoModal = document.getElementById('network-info-modal') as HTMLDivElement;
+const closeNetworkInfoBtn = document.getElementById('close-network-info') as HTMLButtonElement;
+
+// Network info modal function
+function displayNetworkInfo(networkInfo?: NetworkInfo): void {
+  if (!networkInfo || Object.keys(networkInfo).length === 0) {
+    networkInfoBtn.classList.add('hidden');
+    return;
+  }
+  
+  networkInfoBtn.classList.remove('hidden');
+  
+  const netHttpVersion = document.getElementById('net-http-version') as HTMLSpanElement;
+  const netLocalAddress = document.getElementById('net-local-address') as HTMLSpanElement;
+  const netRemoteAddress = document.getElementById('net-remote-address') as HTMLSpanElement;
+  const netTlsProtocol = document.getElementById('net-tls-protocol') as HTMLSpanElement;
+  const netCipherName = document.getElementById('net-cipher-name') as HTMLSpanElement;
+  const netCertCN = document.getElementById('net-cert-cn') as HTMLSpanElement;
+  const netIssuerCN = document.getElementById('net-issuer-cn') as HTMLSpanElement;
+  const netValidUntil = document.getElementById('net-valid-until') as HTMLSpanElement;
+  
+  netHttpVersion.textContent = networkInfo.httpVersion || '-';
+  netLocalAddress.textContent = networkInfo.localAddress || '-';
+  netRemoteAddress.textContent = networkInfo.remoteAddress || '-';
+  netTlsProtocol.textContent = networkInfo.tlsProtocol || '-';
+  netCipherName.textContent = networkInfo.cipherName || '-';
+  netCertCN.textContent = networkInfo.certificateCN || '-';
+  netIssuerCN.textContent = networkInfo.issuerCN || '-';
+  netValidUntil.textContent = networkInfo.validUntil || '-';
+}
 
 
 // Event listener for menu toggle
@@ -430,6 +463,7 @@ function loadTabById(tabId: string): void {
   if (tab.response) {
     lastResponse = tab.response;
     displayResponse(tab.response, currentFormat, resultDiv, statusCodeSpan, responseTimeSpan, responseSizeSpan);
+    displayNetworkInfo(tab.response.networkInfo);
   } else {
     lastResponse = null;
     resultDiv.innerHTML = '<div class="text-gray-400 p-4">No response yet</div>';
@@ -437,6 +471,7 @@ function loadTabById(tabId: string): void {
     statusCodeSpan.className = 'text-gray-500';
     responseTimeSpan.textContent = '-';
     responseSizeSpan.textContent = '-';
+    displayNetworkInfo(undefined);
   }
 }
 
@@ -760,12 +795,14 @@ fetchButton?.addEventListener('click', async () => {
     
     lastResponse = response;
     displayResponse(response, currentFormat, resultDiv, statusCodeSpan, responseTimeSpan, responseSizeSpan);
+    displayNetworkInfo(response.networkInfo);
     saveCurrentTab();
   } catch (error) {
     console.error(error);
     statusCodeSpan.textContent = 'Error';
     statusCodeSpan.className = 'text-red-400 font-semibold';
     resultDiv.textContent = `Error: ${(error as Error).message}`;
+    displayNetworkInfo(undefined);
   } finally {
     fetchButton.disabled = false;
     fetchButton.textContent = 'Send';
@@ -977,6 +1014,15 @@ window.addEventListener('beforeunload', (e) => {
       saveProject(currentProject);
     }
   }
+});
+
+// Network info modal event listeners
+networkInfoBtn?.addEventListener('click', () => {
+  networkInfoModal.classList.remove('hidden');
+});
+
+closeNetworkInfoBtn?.addEventListener('click', () => {
+  networkInfoModal.classList.add('hidden');
 });
 
 // Initialize

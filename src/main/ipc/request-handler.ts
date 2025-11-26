@@ -1,6 +1,6 @@
 import { exec } from 'child_process';
 import { promisify } from 'util';
-import { Request, HttpResponse, KeyValue } from '../../shared/types';
+import { Request, HttpResponse, KeyValue, NetworkInfo } from '../../shared/types';
 
 const execAsync = promisify(exec);
 
@@ -107,14 +107,14 @@ export class RequestHandler {
       }
     }
     
-    // Add timing and size info, and include response even on error
-    command += ` -w "\\n__CURL_TIME__%{time_total}\\n__CURL_SIZE__%{size_download}\\n__CURL_HTTP_CODE__%{http_code}"`;
-    
-    // Follow redirects
-    command += ` -L`;
+    // Add timing, size info, and verbose output for connection details
+    command += ` -w "\\n__CURL_TIME__%{time_total}\\n__CURL_SIZE__%{size_download}\\n__CURL_HTTP_CODE__%{http_code}\\n__CURL_HTTP_VERSION__%{http_version}\\n__CURL_LOCAL_IP__%{local_ip}\\n__CURL_LOCAL_PORT__%{local_port}\\n__CURL_REMOTE_IP__%{remote_ip}\\n__CURL_REMOTE_PORT__%{remote_port}"`;
     
     // Show errors but don't fail
     command += ` --fail-with-body`;
+    
+    // Add verbose flag to capture SSL/TLS info
+    command += ` -v`;
     
     command += ` "${url}"`;
     
@@ -137,6 +137,66 @@ export class RequestHandler {
     }
     
     return headers;
+  }
+  
+  private parseNetworkInfo(stderr: string, stdout: string): NetworkInfo {
+    const networkInfo: NetworkInfo = {};
+    
+    // Extract HTTP version from curl write-out
+    const httpVersionMatch = stdout.match(/__CURL_HTTP_VERSION__([^\n]+)/);
+    if (httpVersionMatch) {
+      networkInfo.httpVersion = httpVersionMatch[1].trim();
+    }
+    
+    // Extract local address
+    const localIpMatch = stdout.match(/__CURL_LOCAL_IP__([^\n]+)/);
+    const localPortMatch = stdout.match(/__CURL_LOCAL_PORT__([^\n]+)/);
+    if (localIpMatch && localPortMatch) {
+      networkInfo.localAddress = `${localIpMatch[1].trim()}:${localPortMatch[1].trim()}`;
+    }
+    
+    // Extract remote address
+    const remoteIpMatch = stdout.match(/__CURL_REMOTE_IP__([^\n]+)/);
+    const remotePortMatch = stdout.match(/__CURL_REMOTE_PORT__([^\n]+)/);
+    if (remoteIpMatch && remotePortMatch) {
+      networkInfo.remoteAddress = `${remoteIpMatch[1].trim()}:${remotePortMatch[1].trim()}`;
+    }
+    
+    // Parse SSL/TLS information from verbose output (stderr)
+    // TLS version
+    const tlsVersionMatch = stderr.match(/SSL connection using (TLS[^\s]+)/i) || 
+                           stderr.match(/TLSv[\d.]+/);
+    if (tlsVersionMatch) {
+      networkInfo.tlsProtocol = tlsVersionMatch[1] || tlsVersionMatch[0];
+    }
+    
+    // Cipher name
+    const cipherMatch = stderr.match(/Cipher is ([^\n]+)/i) || 
+                       stderr.match(/SSL connection using [^\s]+ \/ ([^\n]+)/);
+    if (cipherMatch) {
+      networkInfo.cipherName = cipherMatch[1].trim();
+    }
+    
+    // Certificate CN
+    const certCNMatch = stderr.match(/subject: CN=([^,\n]+)/i) || 
+                       stderr.match(/Server certificate:[\s\S]*?subject: [^\n]*CN=([^,\n]+)/i);
+    if (certCNMatch) {
+      networkInfo.certificateCN = certCNMatch[1].trim();
+    }
+    
+    // Issuer CN
+    const issuerCNMatch = stderr.match(/issuer: [^\n]*CN=([^,\n]+)/i);
+    if (issuerCNMatch) {
+      networkInfo.issuerCN = issuerCNMatch[1].trim();
+    }
+    
+    // Valid until (expire date)
+    const expireDateMatch = stderr.match(/expire date: ([^\n]+)/i);
+    if (expireDateMatch) {
+      networkInfo.validUntil = expireDateMatch[1].trim();
+    }
+    
+    return networkInfo;
   }
   
   async execute(request: Request): Promise<HttpResponse> {
@@ -180,59 +240,40 @@ export class RequestHandler {
         throw new Error('No response received from server');
       }
       
-      // Extract timing info FIRST
+      // Parse network information from verbose output
+      const networkInfo = this.parseNetworkInfo(stderr, stdout);
+      
+      // Parse response
+      const parts = stdout.split('\n\n');
+      let headerSection = parts[0];
+      let bodyParts = parts.slice(1);
+      
+      // Handle multiple HTTP responses (redirects, etc.)
+      const statusLines = headerSection.split('\n').filter(line => line.startsWith('HTTP/'));
+      if (statusLines.length > 1) {
+        const lastStatusIndex = headerSection.lastIndexOf('HTTP/');
+        headerSection = headerSection.substring(lastStatusIndex);
+      }
+      
+      // Extract timing info
       const timeMatch = stdout.match(/__CURL_TIME__([0-9.]+)/);
       const sizeMatch = stdout.match(/__CURL_SIZE__([0-9]+)/);
       const httpCodeMatch = stdout.match(/__CURL_HTTP_CODE__([0-9]+)/);
       
-      // Remove curl metadata from output
-      stdout = stdout.replace(/__CURL_TIME__[0-9.]+\n?/g, '');
-      stdout = stdout.replace(/__CURL_SIZE__[0-9]+\n?/g, '');
-      stdout = stdout.replace(/__CURL_HTTP_CODE__[0-9]+\n?/g, '');
-      
-      // Find the last HTTP response (in case of redirects)
-      const httpResponsePattern = /HTTP\/[\d.]+ \d+/g;
-      const httpMatches = stdout.match(httpResponsePattern);
-      
-      let headerSection = '';
-      let body = '';
-      
-      if (httpMatches && httpMatches.length > 0) {
-        // Find the position of the last HTTP response
-        const lastHttpIndex = stdout.lastIndexOf(httpMatches[httpMatches.length - 1]);
-        
-        // Extract everything from the last HTTP response
-        const lastResponse = stdout.substring(lastHttpIndex);
-        
-        // Split headers and body by first occurrence of \r\n\r\n or \n\n
-        const doubleCrLfIndex = lastResponse.indexOf('\r\n\r\n');
-        const doubleNlIndex = lastResponse.indexOf('\n\n');
-        
-        let splitIndex = -1;
-        if (doubleCrLfIndex !== -1 && doubleNlIndex !== -1) {
-          splitIndex = Math.min(doubleCrLfIndex, doubleNlIndex);
-        } else if (doubleCrLfIndex !== -1) {
-          splitIndex = doubleCrLfIndex;
-        } else if (doubleNlIndex !== -1) {
-          splitIndex = doubleNlIndex;
-        }
-        
-        if (splitIndex !== -1) {
-          headerSection = lastResponse.substring(0, splitIndex);
-          body = lastResponse.substring(splitIndex).replace(/^[\r\n]+/, '').trim();
-        } else {
-          // No body separator found, everything is headers
-          headerSection = lastResponse;
-          body = '';
-        }
-      } else {
-        // No HTTP response found
-        headerSection = stdout;
-        body = '';
-      }
+      // Remove curl metadata from body
+      let body = bodyParts.join('\n\n');
+      body = body.replace(/__CURL_TIME__[0-9.]+\n?/g, '');
+      body = body.replace(/__CURL_SIZE__[0-9]+\n?/g, '');
+      body = body.replace(/__CURL_HTTP_CODE__[0-9]+\n?/g, '');
+      body = body.replace(/__CURL_HTTP_VERSION__[^\n]+\n?/g, '');
+      body = body.replace(/__CURL_LOCAL_IP__[^\n]+\n?/g, '');
+      body = body.replace(/__CURL_LOCAL_PORT__[^\n]+\n?/g, '');
+      body = body.replace(/__CURL_REMOTE_IP__[^\n]+\n?/g, '');
+      body = body.replace(/__CURL_REMOTE_PORT__[^\n]+\n?/g, '');
+      body = body.trim();
       
       // Parse status line
-      const statusLine = headerSection.split(/\r?\n/)[0];
+      const statusLine = headerSection.split('\n')[0];
       const statusMatch = statusLine.match(/HTTP\/[\d.]+ (\d+) (.+)/);
       
       // Use curl's http_code if available, otherwise parse from headers
@@ -253,10 +294,11 @@ export class RequestHandler {
         status: status || 0,
         statusText: statusText || 'No Response',
         headers,
-        body: body || '',
+        body: body || 'No response body',
         time,
         size,
-        timestamp: Date.now()
+        timestamp: Date.now(),
+        networkInfo
       };
     } catch (error) {
       // Return a proper error response

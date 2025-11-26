@@ -302,10 +302,10 @@
         
         <!-- Response Section -->
         <div class="p-4 flex flex-col min-h-0 max-w-[calc(100vw-3rem)]
-                overflow-hidden border border-gray-400 rounded-md
-                bg-[rgba(17,24,39,0.3)]
-                backdrop-blur-xs
-                shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_5px_2.5px_rgba(255,255,255,0.25)]">
+        overflow-hidden border border-gray-400 rounded-md
+        bg-[rgba(17,24,39,0.3)]
+        backdrop-blur-xs
+        shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_5px_2.5px_rgba(255,255,255,0.25)]">
           <div class="flex items-center justify-between mb-3 mt-1">
             <div class="flex items-center gap-4">
               <span class="text-gray-400">Status:</span>
@@ -314,6 +314,12 @@
               <span id="response-time" class="text-gray-500">-</span>
               <span class="text-gray-400">Size:</span>
               <span id="response-size" class="text-gray-500">-</span>
+              <button id="network-info-btn" class="hidden ml-2 text-gray-400 hover:text-white transition-colors" title="Network Information">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" stroke-width="2"></circle>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"></path>
+                </svg>
+              </button>
             </div>
             <select id="format-select" class="bg-[rgba(7,14,29,0.7)] text-white p-2 rounded border border-gray-600 cursor-pointer">
               <option value="raw">Raw</option>
@@ -513,6 +519,50 @@
                 hover:before:left-[150%]
                 active:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_15px_7.5px_rgba(255,255,255,0.75)]
                 active:duration-10">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Network Info Modal -->
+    <div id="network-info-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div class="bg-gray-900 rounded-lg p-6 max-w-lg w-full mx-4">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-bold">Network Information</h2>
+          <button id="close-network-info" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+        </div>
+        <div id="network-info-content" class="space-y-3">
+          <div class="flex justify-between py-2 border-b border-gray-700">
+            <span class="text-gray-400">HTTP Version:</span>
+            <span id="net-http-version" class="text-white">-</span>
+          </div>
+          <div class="flex justify-between py-2 border-b border-gray-700">
+            <span class="text-gray-400">Local Address:</span>
+            <span id="net-local-address" class="text-white">-</span>
+          </div>
+          <div class="flex justify-between py-2 border-b border-gray-700">
+            <span class="text-gray-400">Remote Address:</span>
+            <span id="net-remote-address" class="text-white">-</span>
+          </div>
+          <div class="flex justify-between py-2 border-b border-gray-700">
+            <span class="text-gray-400">TLS Protocol:</span>
+            <span id="net-tls-protocol" class="text-white">-</span>
+          </div>
+          <div class="flex justify-between py-2 border-b border-gray-700">
+            <span class="text-gray-400">Cipher Name:</span>
+            <span id="net-cipher-name" class="text-white text-sm">-</span>
+          </div>
+          <div class="flex justify-between py-2 border-b border-gray-700">
+            <span class="text-gray-400">Certificate CN:</span>
+            <span id="net-cert-cn" class="text-white text-sm">-</span>
+          </div>
+          <div class="flex justify-between py-2 border-b border-gray-700">
+            <span class="text-gray-400">Issuer CN:</span>
+            <span id="net-issuer-cn" class="text-white text-sm">-</span>
+          </div>
+          <div class="flex justify-between py-2">
+            <span class="text-gray-400">Valid Until:</span>
+            <span id="net-valid-until" class="text-white text-sm">-</span>
+          </div>
         </div>
       </div>
     </div>
