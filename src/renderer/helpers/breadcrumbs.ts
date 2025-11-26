@@ -81,7 +81,7 @@ export function renderBreadcrumbs(
     breadcrumb.textContent = item.name;
     breadcrumb.className = index === breadcrumbs.length - 1 
       ? 'text-white text-sm font-semibold' 
-      : 'text-blue-400 text-sm cursor-pointer hover:underline';
+      : 'text-gray-400 text-sm cursor-pointer hover:underline';
     
     container.appendChild(breadcrumb);
   });

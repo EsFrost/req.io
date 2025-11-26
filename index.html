@@ -172,7 +172,6 @@
           </button>
         </div>
         
-        <!-- Fix the color of the text -->
         <!-- Tabs -->
         <div class="flex border-b border-gray-700 mb-4">
           <button id="params-tab" class="px-4 py-2 font-semibold">Query Params</button>
@@ -329,7 +328,21 @@
             </select>
           </div>
           
-          <div id="result" class="rounded" style="overflow: auto; min-height: 0;"></div>
+          <!-- Response Tabs -->
+          <div class="flex border-b border-gray-700 mb-3">
+            <button id="response-body-tab" class="px-4 py-2 font-semibold border-b-2 border-white text-white">Body</button>
+            <button id="response-headers-tab" class="px-4 py-2 font-semibold border-b-2 border-transparent text-gray-400">Headers</button>
+          </div>
+          
+          <!-- Body Panel -->
+          <div id="response-body-panel" class="flex-1 min-h-0">
+            <div id="result" class="rounded" style="overflow: auto; min-height: 0;"></div>
+          </div>
+          
+          <!-- Headers Panel -->
+          <div id="response-headers-panel" class="hidden flex-1 min-h-0 overflow-auto">
+            <div id="response-headers-list" class="space-y-2"></div>
+          </div>
         </div>
       </div>
     </div>

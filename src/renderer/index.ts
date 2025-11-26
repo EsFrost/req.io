@@ -32,6 +32,7 @@ declare global {
 }
 
 type TabType = 'params' | 'headers' | 'body' | 'auth';
+type ResponseTabType = 'body' | 'headers';
 
 // State
 let projects: Project[] = [];
@@ -44,6 +45,7 @@ let currentFormat: DisplayFormat = 'raw';
 let currentMethod: HttpMethod = 'GET';
 let lastResponse: HttpResponse | null = null;
 let currentTab: TabType = 'params';
+let currentResponseTab: ResponseTabType = 'body';
 let queryParams: KeyValue[] = [];
 let headers: KeyValue[] = [];
 let formFields: KeyValue[] = [];
@@ -157,6 +159,13 @@ const networkInfoBtn = document.getElementById('network-info-btn') as HTMLButton
 const networkInfoModal = document.getElementById('network-info-modal') as HTMLDivElement;
 const closeNetworkInfoBtn = document.getElementById('close-network-info') as HTMLButtonElement;
 
+// Response tabs
+const responseBodyTab = document.getElementById('response-body-tab') as HTMLButtonElement;
+const responseHeadersTab = document.getElementById('response-headers-tab') as HTMLButtonElement;
+const responseBodyPanel = document.getElementById('response-body-panel') as HTMLDivElement;
+const responseHeadersPanel = document.getElementById('response-headers-panel') as HTMLDivElement;
+const responseHeadersList = document.getElementById('response-headers-list') as HTMLDivElement;
+
 // Network info modal function
 function displayNetworkInfo(networkInfo?: NetworkInfo): void {
   if (!networkInfo || Object.keys(networkInfo).length === 0) {
@@ -183,6 +192,57 @@ function displayNetworkInfo(networkInfo?: NetworkInfo): void {
   netCertCN.textContent = networkInfo.certificateCN || '-';
   netIssuerCN.textContent = networkInfo.issuerCN || '-';
   netValidUntil.textContent = networkInfo.validUntil || '-';
+}
+
+function switchResponseTab(tab: ResponseTabType): void {
+  currentResponseTab = tab;
+  
+  // Update tab styles
+  [responseBodyTab, responseHeadersTab].forEach(t => {
+    t.classList.remove('border-white', 'text-white');
+    t.classList.add('border-transparent', 'text-gray-400');
+  });
+  
+  [responseBodyPanel, responseHeadersPanel].forEach(p => p.classList.add('hidden'));
+  
+  switch (tab) {
+    case 'body':
+      responseBodyTab.classList.add('border-white', 'text-white');
+      responseBodyTab.classList.remove('text-gray-400', 'border-transparent');
+      responseBodyPanel.classList.remove('hidden');
+      break;
+    case 'headers':
+      responseHeadersTab.classList.add('border-white', 'text-white');
+      responseHeadersTab.classList.remove('text-gray-400', 'border-transparent');
+      responseHeadersPanel.classList.remove('hidden');
+      break;
+  }
+}
+
+function displayResponseHeaders(headers: Record<string, string>): void {
+  responseHeadersList.innerHTML = '';
+  
+  if (!headers || Object.keys(headers).length === 0) {
+    responseHeadersList.innerHTML = '<div class="text-gray-400 p-4">No headers</div>';
+    return;
+  }
+  
+  Object.entries(headers).forEach(([key, value]) => {
+    const headerItem = document.createElement('div');
+    headerItem.className = 'flex justify-between py-2 px-3 bg-[rgba(7,14,29,0.5)] rounded border border-gray-700';
+    
+    const headerKey = document.createElement('span');
+    headerKey.className = 'font-semibold';
+    headerKey.textContent = key;
+    
+    const headerValue = document.createElement('span');
+    headerValue.className = 'text-white text-sm break-all ml-4';
+    headerValue.textContent = value;
+    
+    headerItem.appendChild(headerKey);
+    headerItem.appendChild(headerValue);
+    responseHeadersList.appendChild(headerItem);
+  });
 }
 
 
@@ -464,6 +524,7 @@ function loadTabById(tabId: string): void {
     lastResponse = tab.response;
     displayResponse(tab.response, currentFormat, resultDiv, statusCodeSpan, responseTimeSpan, responseSizeSpan);
     displayNetworkInfo(tab.response.networkInfo);
+    displayResponseHeaders(tab.response.headers);
   } else {
     lastResponse = null;
     resultDiv.innerHTML = '<div class="text-gray-400 p-4">No response yet</div>';
@@ -472,6 +533,7 @@ function loadTabById(tabId: string): void {
     responseTimeSpan.textContent = '-';
     responseSizeSpan.textContent = '-';
     displayNetworkInfo(undefined);
+    displayResponseHeaders({});
   }
 }
 
@@ -796,6 +858,7 @@ fetchButton?.addEventListener('click', async () => {
     lastResponse = response;
     displayResponse(response, currentFormat, resultDiv, statusCodeSpan, responseTimeSpan, responseSizeSpan);
     displayNetworkInfo(response.networkInfo);
+    displayResponseHeaders(response.headers);
     saveCurrentTab();
   } catch (error) {
     console.error(error);
@@ -803,6 +866,7 @@ fetchButton?.addEventListener('click', async () => {
     statusCodeSpan.className = 'text-red-400 font-semibold';
     resultDiv.textContent = `Error: ${(error as Error).message}`;
     displayNetworkInfo(undefined);
+    displayResponseHeaders({});
   } finally {
     fetchButton.disabled = false;
     fetchButton.textContent = 'Send';
@@ -1025,6 +1089,10 @@ closeNetworkInfoBtn?.addEventListener('click', () => {
   networkInfoModal.classList.add('hidden');
 });
 
+// Response tab event listeners
+responseBodyTab?.addEventListener('click', () => switchResponseTab('body'));
+responseHeadersTab?.addEventListener('click', () => switchResponseTab('headers'));
+
 // Initialize
 loadProjects().then(() => {
   const request: Request = {
@@ -1039,4 +1107,5 @@ loadProjects().then(() => {
   };
   tabManager.createTab(request);
   switchTab('params');
+  switchResponseTab('body');
 });
