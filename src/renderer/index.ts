@@ -498,9 +498,9 @@ function loadTabById(tabId: string): void {
       authTypeSelect
     },
     {
-      renderParams: () => renderKeyValueList(paramsContainer, queryParams, debouncedSaveCurrentTab),
-      renderHeaders: () => renderKeyValueList(headersContainer, headers, debouncedSaveCurrentTab),
-      renderFormFields: () => renderKeyValueList(bodyFormDataContainer, formFields, debouncedSaveCurrentTab)
+      renderParams: () => renderKeyValueList(paramsContainer, queryParams, debouncedSaveCurrentTab, true),
+      renderHeaders: () => renderKeyValueList(headersContainer, headers, debouncedSaveCurrentTab, true),
+      renderFormFields: () => renderKeyValueList(bodyFormDataContainer, formFields, debouncedSaveCurrentTab, true)
     },
     {
       setMethod: (method) => {
@@ -770,16 +770,16 @@ methodOptions.forEach(option => {
 
 addParamBtn?.addEventListener('click', () => {
   syncArrayFromDOM(paramsContainer, queryParams);
-  addKeyValue(queryParams, paramsContainer, debouncedSaveCurrentTab);
+  addKeyValue(queryParams, paramsContainer, debouncedSaveCurrentTab, true);
 });
 addHeaderBtn?.addEventListener('click', () => {
   syncArrayFromDOM(headersContainer, headers);
-  addKeyValue(headers, headersContainer, debouncedSaveCurrentTab);
+  addKeyValue(headers, headersContainer, debouncedSaveCurrentTab, true);
 });
 
 addFormFieldBtn?.addEventListener('click', () => {
   syncArrayFromDOM(bodyFormDataContainer, formFields);
-  addKeyValue(formFields, bodyFormDataContainer, debouncedSaveCurrentTab);
+  addKeyValue(formFields, bodyFormDataContainer, debouncedSaveCurrentTab, true);
 });
 
 bodyTypeSelect?.addEventListener('change', () => {
