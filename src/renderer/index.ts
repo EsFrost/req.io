@@ -3,7 +3,7 @@ import { TabManager } from './helpers/tab-manager';
 import { replaceVariables } from './helpers/variable-replacer';
 import { DisplayFormat, displayResponse } from './helpers/response-handler';
 import { buildRequest, methodColors, isHttpMethod } from './helpers/request-builder';
-import { renderKeyValueList, addKeyValue } from './helpers/key-value-renderer';
+import { renderKeyValueList, addKeyValue, syncArrayFromDOM } from './helpers/key-value-renderer';
 import { deleteFolder, deleteRequest, createFolder, createRequest, addFolderToProject, addRequestToProject } from './helpers/project-manager';
 import { renderSidebar, SidebarCallbacks } from './helpers/sidebar-renderer';
 import { renderProjectList, ProjectCallbacks } from './helpers/project-renderer';
@@ -621,7 +621,7 @@ function openProjectForm(project?: Project): void {
   projectBaseUrlInput.value = project?.baseUrl || '';
   
   projectVariables = project?.variables ? [...project.variables] : [];
-  renderKeyValueList(projectVariablesContainer, projectVariables, () => {});
+  renderKeyValueList(projectVariablesContainer, projectVariables, () => {}, true);
   
   projectModal.classList.add('hidden');
   projectFormModal.classList.remove('hidden');
@@ -1011,7 +1011,7 @@ createProjectBtn?.addEventListener('click', () => {
 });
 
 addProjectVariableBtn?.addEventListener('click', () => {
-  addKeyValue(projectVariables, projectVariablesContainer, () => {});
+  addKeyValue(projectVariables, projectVariablesContainer, () => {}, true);
 });
 
 saveProjectFormBtn?.addEventListener('click', async () => {
@@ -1021,17 +1021,8 @@ saveProjectFormBtn?.addEventListener('click', async () => {
     return;
   }
   
-  const variableRows = projectVariablesContainer.querySelectorAll('.flex');
-  const variables: KeyValue[] = [];
-  variableRows.forEach(row => {
-    const checkbox = row.querySelector('input[type="checkbox"]') as HTMLInputElement;
-    const inputs = row.querySelectorAll('input[type="text"]') as NodeListOf<HTMLInputElement>;
-    variables.push({
-      key: inputs[0].value,
-      value: inputs[1].value,
-      enabled: checkbox.checked
-    });
-  });
+  // Sync the variables from DOM before saving
+  syncArrayFromDOM(projectVariablesContainer, projectVariables);
   
   const project: Project = editingProjectId
     ? { ...projects.find(p => p.id === editingProjectId)!, updatedAt: Date.now() }
@@ -1048,7 +1039,7 @@ saveProjectFormBtn?.addEventListener('click', async () => {
   project.name = name;
   project.description = projectDescInput.value.trim();
   project.baseUrl = projectBaseUrlInput.value.trim();
-  project.variables = variables;
+  project.variables = projectVariables;  // Use the synced array directly
   
   await saveProject(project);
   
