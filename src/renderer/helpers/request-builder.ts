@@ -31,12 +31,16 @@ export function buildRequest(
   const currentParams: KeyValue[] = [];
   paramRows.forEach(row => {
     const checkbox = row.querySelector('input[type="checkbox"]') as HTMLInputElement;
-    const inputs = row.querySelectorAll('input[type="text"]') as NodeListOf<HTMLInputElement>;
-    currentParams.push({
-      key: inputs[0].value,
-      value: inputs[1].value,
-      enabled: checkbox.checked
-    });
+    const keyInput = row.querySelector('[data-key-input]') as HTMLInputElement;
+    const valueInput = row.querySelector('[data-value-input]') as HTMLInputElement;
+    
+    if (checkbox && keyInput && valueInput) {
+      currentParams.push({
+        key: keyInput.value,
+        value: valueInput.value,
+        enabled: checkbox.checked
+      });
+    }
   });
   
   // Get headers from inputs
@@ -44,12 +48,16 @@ export function buildRequest(
   const currentHeaders: KeyValue[] = [];
   headerRows.forEach(row => {
     const checkbox = row.querySelector('input[type="checkbox"]') as HTMLInputElement;
-    const inputs = row.querySelectorAll('input[type="text"]') as NodeListOf<HTMLInputElement>;
-    currentHeaders.push({
-      key: inputs[0].value,
-      value: inputs[1].value,
-      enabled: checkbox.checked
-    });
+    const keyInput = row.querySelector('[data-key-input]') as HTMLInputElement;
+    const valueInput = row.querySelector('[data-value-input]') as HTMLInputElement;
+    
+    if (checkbox && keyInput && valueInput) {
+      currentHeaders.push({
+        key: keyInput.value,
+        value: valueInput.value,
+        enabled: checkbox.checked
+      });
+    }
   });
   
   // Build body
@@ -67,12 +75,16 @@ export function buildRequest(
     const formData: KeyValue[] = [];
     formRows.forEach(row => {
       const checkbox = row.querySelector('input[type="checkbox"]') as HTMLInputElement;
-      const inputs = row.querySelectorAll('input[type="text"]') as NodeListOf<HTMLInputElement>;
-      formData.push({
-        key: inputs[0].value,
-        value: inputs[1].value,
-        enabled: checkbox.checked
-      });
+      const keyInput = row.querySelector('[data-key-input]') as HTMLInputElement;
+      const valueInput = row.querySelector('[data-value-input]') as HTMLInputElement;
+      
+      if (checkbox && keyInput && valueInput) {
+        formData.push({
+          key: keyInput.value,
+          value: valueInput.value,
+          enabled: checkbox.checked
+        });
+      }
     });
     body = { type: bodyType, formData };
   }

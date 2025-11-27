@@ -768,9 +768,19 @@ methodOptions.forEach(option => {
   });
 });
 
-addParamBtn?.addEventListener('click', () => addKeyValue(queryParams, paramsContainer, debouncedSaveCurrentTab));
-addHeaderBtn?.addEventListener('click', () => addKeyValue(headers, headersContainer, debouncedSaveCurrentTab));
-addFormFieldBtn?.addEventListener('click', () => addKeyValue(formFields, bodyFormDataContainer, debouncedSaveCurrentTab));
+addParamBtn?.addEventListener('click', () => {
+  syncArrayFromDOM(paramsContainer, queryParams);
+  addKeyValue(queryParams, paramsContainer, debouncedSaveCurrentTab);
+});
+addHeaderBtn?.addEventListener('click', () => {
+  syncArrayFromDOM(headersContainer, headers);
+  addKeyValue(headers, headersContainer, debouncedSaveCurrentTab);
+});
+
+addFormFieldBtn?.addEventListener('click', () => {
+  syncArrayFromDOM(bodyFormDataContainer, formFields);
+  addKeyValue(formFields, bodyFormDataContainer, debouncedSaveCurrentTab);
+});
 
 bodyTypeSelect?.addEventListener('change', () => {
   const type = bodyTypeSelect.value;
@@ -833,6 +843,48 @@ formatSelect?.addEventListener('change', () => {
   }
 });
 
+// fetchButton?.addEventListener('click', async () => {
+//   try {
+//     fetchButton.disabled = true;
+//     fetchButton.textContent = 'Sending...';
+    
+//     saveCurrentTab();
+    
+//     const request = buildRequest(
+//       currentMethod,
+//       urlInput,
+//       paramsContainer,
+//       headersContainer,
+//       bodyTypeSelect,
+//       bodyRawTextarea,
+//       bodyJsonTextarea,
+//       bodyFormDataContainer,
+//       authTypeSelect,
+//       currentProject?.id
+//     );
+    
+//     const processedRequest = { ...request };
+//     processedRequest.url = replaceVariables(request.url, currentProject);
+    
+//     const response = await window.electron.sendRequest(processedRequest);
+    
+//     lastResponse = response;
+//     displayResponse(response, currentFormat, resultDiv, statusCodeSpan, responseTimeSpan, responseSizeSpan);
+//     displayNetworkInfo(response.networkInfo);
+//     displayResponseHeaders(response.headers);
+//     saveCurrentTab();
+//   } catch (error) {
+//     console.error(error);
+//     statusCodeSpan.textContent = 'Error';
+//     statusCodeSpan.className = 'text-red-400 font-semibold';
+//     resultDiv.textContent = `Error: ${(error as Error).message}`;
+//     displayNetworkInfo(undefined);
+//     displayResponseHeaders({});
+//   } finally {
+//     fetchButton.disabled = false;
+//     fetchButton.textContent = 'Send';
+//   }
+// });
 fetchButton?.addEventListener('click', async () => {
   try {
     fetchButton.disabled = true;
@@ -853,8 +905,31 @@ fetchButton?.addEventListener('click', async () => {
       currentProject?.id
     );
     
+    console.log('Original request:', request);
+    console.log('Current project:', currentProject);
+    console.log('Original query params:', request.queryParams);
+    
     const processedRequest = { ...request };
+    
+    // Replace variables in URL
     processedRequest.url = replaceVariables(request.url, currentProject);
+    
+    // Replace variables in query params
+    processedRequest.queryParams = request.queryParams.map(param => ({
+      ...param,
+      key: replaceVariables(param.key, currentProject),
+      value: replaceVariables(param.value, currentProject)
+    }));
+    
+    console.log('Processed query params:', processedRequest.queryParams);
+    console.log('Full processed request:', processedRequest);
+    
+    // Replace variables in headers
+    processedRequest.headers = request.headers.map(header => ({
+      ...header,
+      key: replaceVariables(header.key, currentProject),
+      value: replaceVariables(header.value, currentProject)
+    }));
     
     const response = await window.electron.sendRequest(processedRequest);
     

@@ -330,7 +330,26 @@ export class RequestHandler {
     
     return new Promise((resolve, reject) => {
       try {
-        const urlObj = new URL(request.url);
+        // Build URL with query params first
+        let fullUrl = request.url;
+        const enabledParams = request.queryParams?.filter(p => p.enabled && p.key) || [];
+        if (enabledParams.length > 0) {
+          const queryString = enabledParams
+            .map(p => `${encodeURIComponent(p.key)}=${encodeURIComponent(p.value || '')}`)
+            .join('&');
+          fullUrl += (fullUrl.includes('?') ? '&' : '?') + queryString;
+        }
+        
+        // Add API key to query if needed
+        if (request.auth?.type === 'api-key' && 
+            request.auth.apiKey?.addTo === 'query' && 
+            request.auth.apiKey.key && 
+            request.auth.apiKey.value) {
+          const separator = fullUrl.includes('?') ? '&' : '?';
+          fullUrl += `${separator}${encodeURIComponent(request.auth.apiKey.key)}=${encodeURIComponent(request.auth.apiKey.value)}`;
+        }
+        
+        const urlObj = new URL(fullUrl);
         const isHttps = urlObj.protocol === 'https:';
         const client = isHttps ? https : http;
         
@@ -341,7 +360,7 @@ export class RequestHandler {
           path: urlObj.pathname + urlObj.search,
           method: request.method,
           headers: {},
-          rejectUnauthorized: false, // Accept self-signed certificates
+          rejectUnauthorized: false,
         };
         
         // Add headers

@@ -112,19 +112,23 @@ export function createKeyValueRow(
 
 export function syncArrayFromDOM(container: HTMLDivElement, items: KeyValue[]): void {
   const rows = container.querySelectorAll('.flex');
-  rows.forEach((row, index) => {
-    if (index < items.length) {
-      const checkbox = row.querySelector('input[type="checkbox"]') as HTMLInputElement;
-      const keyInput = row.querySelector('[data-key-input]') as HTMLInputElement;
-      const valueInput = row.querySelector('[data-value-input]') as HTMLInputElement;
-      const sensitiveBtn = row.querySelector('[data-sensitive-btn]') as HTMLButtonElement;
-      
-      if (checkbox && keyInput && valueInput) {
-        items[index].enabled = checkbox.checked;
-        items[index].key = keyInput.value;
-        items[index].value = valueInput.value;
-        items[index].sensitive = sensitiveBtn ? sensitiveBtn.dataset.isSensitive === 'true' : false;
-      }
+  
+  // Clear the array and rebuild from DOM
+  items.length = 0;
+  
+  rows.forEach((row) => {
+    const checkbox = row.querySelector('input[type="checkbox"]') as HTMLInputElement;
+    const keyInput = row.querySelector('[data-key-input]') as HTMLInputElement;
+    const valueInput = row.querySelector('[data-value-input]') as HTMLInputElement;
+    const sensitiveBtn = row.querySelector('[data-sensitive-btn]') as HTMLButtonElement;
+    
+    if (checkbox && keyInput && valueInput) {
+      items.push({
+        key: keyInput.value,
+        value: valueInput.value,
+        enabled: checkbox.checked,
+        sensitive: sensitiveBtn ? sensitiveBtn.dataset.isSensitive === 'true' : false
+      });
     }
   });
 }
@@ -135,8 +139,6 @@ export function renderKeyValueList(
   onUpdate: () => void,
   showSensitiveToggle: boolean = false
 ): void {
-  // First, sync the current DOM values back to the array
-  syncArrayFromDOM(container, items);
   
   container.innerHTML = '';
   items.forEach((item, index) => {
@@ -163,9 +165,12 @@ export function addKeyValue(
   onUpdate: () => void,
   showSensitiveToggle: boolean = false
 ): void {
-  // Sync current values before adding new
+  // Sync current DOM values back to array FIRST
   syncArrayFromDOM(container, items);
   
+  // Then add new empty item
   items.push({ key: '', value: '', enabled: true });
+  
+  // Re-render
   renderKeyValueList(container, items, onUpdate, showSensitiveToggle);
 }
