@@ -47,4 +47,14 @@
     font-size: 14px;
     line-height: 1.25rem;
   }
+
+  /* Hide scrollbar for main content area while keeping scroll functionality */
+  .flex-1.flex.flex-col.px-6.mb-1.overflow-y-auto {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+
+  .flex-1.flex.flex-col.px-6.mb-1.overflow-y-auto::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
 }

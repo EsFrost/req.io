@@ -11,16 +11,6 @@
     <link href="./node_modules/highlight.js/styles/atom-one-dark.css" rel="stylesheet">
   </head>
   <body class="bg-gray-900 text-white">
-    <button id="toggle-menu" class="p-2 hover:bg-gray-800 rounded absolute top-0 right-0">
-      <!-- Hamburger icon (shown by default) -->
-      <svg id="hamburger-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-      </svg>
-      <!-- X icon (hidden by default) -->
-      <svg id="close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-      </svg>
-    </button>
     <div class="flex h-screen">
       <!-- Sidebar -->
       <div class="w-64 p-4 bg-[rgba(7,14,29,0.5)] overflow-y-auto border-gray-700
@@ -54,21 +44,32 @@
       </div>
 
       <!-- Main Content -->
-      <div class="flex-1 flex flex-col px-6 mb-1 overflow-hidden">
-        <div class="flex items-center">
+      <div class="flex-1 flex flex-col px-6 mb-1 overflow-y-auto">
+        <div class="flex items-center flex-shrink-0 relative">
           <img src="./build/icon.png" alt="Req-Rep.io logo" class="w-14 h-14 mt-3">
           <h1 class="text-3xl font-bold mb-4 mt-6 -ml-1">eq-Rep.io</h1>
+
+          <button id="toggle-menu" class="p-2 hover:bg-gray-800 rounded absolute top-0 -right-6 z-50">
+            <!-- Hamburger icon (shown by default) -->
+            <svg id="hamburger-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+            <!-- X icon (hidden by default) -->
+            <svg id="close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
         </div>
         
         
         <!-- Tabs Bar -->
-        <div class="flex items-center gap-2 mb-4 border-b border-gray-700 pb-0">
+        <div class="flex items-center gap-2 mb-4 border-b border-gray-700 pb-0 flex-shrink-0">
           <div id="tabs-container" class="flex gap-1"></div>
           <button id="new-tab" class="px-3 py-2 text-gray-400 hover:text-white text-xl font-bold">+</button>
         </div>
         
         <!-- URL Bar -->
-        <div class="mb-4 flex items-center gap-3 w-full">
+        <div class="mb-4 flex items-center gap-3 w-full flex-shrink-0">
           <div class="relative flex-shrink-0">
             <button id="method-button" class="text-green-600 font-semibold px-4 py-2 rounded cursor-pointer min-w-[120px] text-left flex items-center justify-between gap-3 bg-[rgba(7,14,29,0.7)] hover:bg-[rgba(7,14,29,0.9)] transition-all duration-300 border border-gray-700">
               <span id="method-text">GET</span>
@@ -150,7 +151,7 @@
         </div>
 
         <!-- Breadcrumbs and Context -->
-        <div class="mb-3 min-h-[3rem] flex items-center justify-between
+        <div class="mb-3 min-h-[3rem] flex items-center justify-between flex-shrink-0
                     overflow-hidden border border-gray-400 rounded-md px-4 py-2
                     bg-[rgba(17,24,39,0.3)]
                     backdrop-blur-xs
@@ -179,7 +180,7 @@
         </div>
         
         <!-- Tabs -->
-        <div class="flex border-b border-gray-700 mb-4">
+        <div class="flex border-b border-gray-700 mb-4 flex-shrink-0">
           <button id="params-tab" class="px-4 py-2 font-semibold">Query Params</button>
           <button id="headers-tab" class="px-4 py-2 font-semibold">Headers</button>
           <button id="body-tab" class="px-4 py-2 font-semibold">Body</button>
@@ -189,7 +190,6 @@
         <!-- Params Panel -->
         <div id="params-panel" class="mb-4">
           <div id="params-container" class="mb-2"></div>
-          <!--Change the UI to glass here-->
           <button id="add-param" class="text-sm
                                         overflow-hidden border border-gray-400 rounded-md px-4 py-2 cursor-pointer
                                         bg-[rgba(17,24,39,0.3)]
@@ -306,85 +306,85 @@
         </div>
         
         <!-- Response Section -->
-        <div class="p-4 flex flex-col min-h-0 max-w-[calc(100vw-3rem)]
-        overflow-hidden border border-gray-400 rounded-md
-        bg-[rgba(17,24,39,0.3)]
-        backdrop-blur-xs
-        shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_5px_2.5px_rgba(255,255,255,0.25)]">
-          <div class="flex items-center justify-between mb-3 mt-1">
-            <div class="flex items-center gap-4">
-              <span class="text-gray-400">Status:</span>
-              <span id="status-code" class="text-gray-500">-</span>
-              <span class="text-gray-400">Time:</span>
-              <span id="response-time" class="text-gray-500">-</span>
-              <span class="text-gray-400">Size:</span>
-              <span id="response-size" class="text-gray-500">-</span>
-              <button id="network-info-btn" class="hidden ml-2 text-gray-400 hover:text-white transition-colors" title="Network Information">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="10" stroke-width="2"></circle>
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"></path>
-                </svg>
+        <div class="flex flex-col max-w-[calc(100vw-3rem)] mb-4
+             border border-gray-400 rounded-md
+             bg-[rgba(17,24,39,0.3)]
+             backdrop-blur-xs
+             shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_5px_2.5px_rgba(255,255,255,0.25)]">
+          
+          <!-- Fixed Header Section -->
+          <div class="p-4 flex-shrink-0">
+            <div class="flex items-center justify-between mb-3 mt-1">
+              <div class="flex items-center gap-4">
+                <span class="text-gray-400">Status:</span>
+                <span id="status-code" class="text-gray-500">-</span>
+                <span class="text-gray-400">Time:</span>
+                <span id="response-time" class="text-gray-500">-</span>
+                <span class="text-gray-400">Size:</span>
+                <span id="response-size" class="text-gray-500">-</span>
+                <button id="network-info-btn" class="hidden ml-2 text-gray-400 hover:text-white transition-colors" title="Network Information">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" stroke-width="2"></circle>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"></path>
+                  </svg>
+                </button>
+              </div>
+              <select id="format-select" class="bg-[rgba(7,14,29,0.7)] text-white p-2 rounded border border-gray-600 cursor-pointer">
+                <option value="raw">Raw</option>
+                <option value="json">JSON</option>
+                <option value="html">HTML</option>
+                <option value="xml">XML</option>
+              </select>
+            </div>
+            
+            <!-- Response Tabs -->
+            <div class="flex items-center justify-between border-b border-gray-700 mb-3">
+              <div class="flex">
+                <button id="response-body-tab" class="px-4 py-2 font-semibold border-b-2 border-white text-white">Body</button>
+                <button id="response-headers-tab" class="px-4 py-2 font-semibold border-b-2 border-transparent text-gray-400">Headers</button>
+              </div>
+              <button id="save-response-request" class="text-sm overflow-hidden border border-gray-400 rounded-md px-3 py-1 cursor-pointer
+                  bg-[rgba(17,24,39,0.3)]
+                  backdrop-blur-xs
+                  shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_5px_2.5px_rgba(255,255,255,0.25)]
+                  transition-all duration-500 ease-in-out
+                  hover:backdrop-blur-md
+                  hover:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_10px_5px_rgba(255,255,255,0.5)]
+                  before:content-[''] before:absolute before:top-0 before:left-[-100%] before:w-[50%] before:h-full
+                  before:bg-gradient-to-r before:from-transparent before:via-white/40 before:to-transparent
+                  before:skew-x-[-25deg]
+                  before:transition-all before:duration-500 before:ease-in-out
+                  hover:before:left-[150%]
+                  active:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_15px_7.5px_rgba(255,255,255,0.75)]
+                  active:duration-10">
+                Save response
               </button>
             </div>
-            <select id="format-select" class="bg-[rgba(7,14,29,0.7)] text-white p-2 rounded border border-gray-600 cursor-pointer">
-              <option value="raw">Raw</option>
-              <option value="json">JSON</option>
-              <option value="html">HTML</option>
-              <option value="xml">XML</option>
-            </select>
           </div>
           
-          <!-- Response Tabs -->
-          <div class="flex items-center justify-between border-b border-gray-700 mb-3">
-            <div class="flex">
-              <button id="response-body-tab" class="px-4 py-2 font-semibold border-b-2 border-white text-white">Body</button>
-              <button id="response-headers-tab" class="px-4 py-2 font-semibold border-b-2 border-transparent text-gray-400">Headers</button>
-            </div>
-            <button id="save-response-request" class="text-sm overflow-hidden border border-gray-400 rounded-md px-3 py-1 cursor-pointer
-                bg-[rgba(17,24,39,0.3)]
-                backdrop-blur-xs
-                shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_5px_2.5px_rgba(255,255,255,0.25)]
-                transition-all duration-500 ease-in-out
-                hover:backdrop-blur-md
-                hover:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_10px_5px_rgba(255,255,255,0.5)]
-                before:content-[''] before:absolute before:top-0 before:left-[-100%] before:w-[50%] before:h-full
-                before:bg-gradient-to-r before:from-transparent before:via-white/40 before:to-transparent
-                before:skew-x-[-25deg]
-                before:transition-all before:duration-500 before:ease-in-out
-                hover:before:left-[150%]
-                active:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_15px_7.5px_rgba(255,255,255,0.75)]
-                active:duration-10">
-              Save response
-            </button>
-          </div>
-          
-          <!-- Body Panel -->
-          <div id="response-body-panel" class="flex-1 min-h-0 overflow-auto">
+          <!-- Auto-height Body Panel -->
+          <div id="response-body-panel" class="px-4 pb-4">
             <div id="result" class="rounded"></div>
           </div>
           
-          <!-- Headers Panel -->
-          <div id="response-headers-panel" class="hidden flex-1 min-h-0 overflow-auto">
+          <!-- Auto-height Headers Panel -->
+          <div id="response-headers-panel" class="hidden px-4 pb-4">
             <div id="response-headers-list" class="space-y-2"></div>
           </div>
         </div>
       </div>
     </div>
     
-    <!--Change the UI to glass here-->
     <!-- History Modal -->
     <div id="history-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div class="bg-gray-900 rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-hidden flex flex-col">
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-2xl font-bold">Request History</h2>
           <div class="flex gap-2">
-            <!--Change the UI to glass here-->
             <button id="clear-history" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-sm">Clear History</button>
-            <!--Change the UI to glass here-->
             <button id="close-history" class="text-gray-400 hover:text-white text-2xl">&times;</button>
           </div>
         </div>
-        <!--Change the UI to glass here-->
         <div id="history-container" class="flex-1 overflow-auto"></div>
       </div>
     </div>
@@ -394,9 +394,7 @@
       <div class="bg-gray-900 rounded-lg p-6 max-w-4xl w-full mx-4 max-h-[80vh] overflow-hidden flex flex-col">
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-2xl font-bold">Projects</h2>
-          <!--Change the UI to glass here-->
           <div class="flex gap-2">
-            <!--Change the UI to glass here-->
             <button id="import-project" class="px-4 py-2 text-sm overflow-hidden border border-gray-400 rounded-md px-4 py-2 text-lg cursor-pointer relative
                 bg-[rgba(17,24,39,0.3)]
                 backdrop-blur-xs
@@ -411,7 +409,6 @@
                 hover:before:left-[150%]
                 active:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_15px_7.5px_rgba(255,255,255,0.75)]
                 active:duration-10">Import Project</button>
-            <!--Change the UI to glass here-->
             <button id="create-project" class="px-4 py-2 text-sm overflow-hidden border border-gray-400 rounded-md px-4 py-2 text-lg cursor-pointer relative
                 bg-[rgba(17,24,39,0.3)]
                 backdrop-blur-xs
@@ -426,7 +423,6 @@
                 hover:before:left-[150%]
                 active:shadow-[0_8px_32px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.5),_inset_0_-1px_0_rgba(255,255,255,0.1),_inset_0_0_15px_7.5px_rgba(255,255,255,0.75)]
                 active:duration-10">Create Project</button>
-            <!--Change the UI to glass here-->
             <button id="close-project-modal" class="text-gray-400 hover:text-white text-2xl">&times;</button>
           </div>
         </div>
@@ -442,13 +438,11 @@
         <div class="flex-1 overflow-auto mb-4">
           <div class="mb-4">
             <label class="block text-sm font-semibold mb-2">Project Name *</label>
-            <!--Change the UI to glass here-->
             <input type="text" id="project-name-input" class="w-full bg-[rgba(7,14,29,0.7)] text-white p-2 rounded border border-gray-700" placeholder="My Project">
           </div>
           
           <div class="mb-4">
             <label class="block text-sm font-semibold mb-2">Description</label>
-            <!--Change the UI to glass here-->
             <textarea id="project-desc-input" class="w-full bg-[rgba(7,14,29,0.7)] text-white p-2 rounded border border-gray-700" rows="3" placeholder="Project description"></textarea>
           </div>
           
