@@ -2,7 +2,7 @@
   "name": "req-rep.io-electron",
   "version": "0.1.18-a",
   "description": "App to test API endpoints using curl and electron",
-  "license": "ISC",
+  "license": "MIT",
   "author": "Sigmund Frost",
   "type": "commonjs",
   "main": "dist/main/index.js",
