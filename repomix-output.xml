@@ -2671,16 +2671,16 @@ export class RequestHandler {
     // For all requests, use Node.js native client for better body parsing
     try {
       const url = new URL(request.url);
-      console.log('Using Node.js HTTP client');
+      
       return await this.executeWithNodeHttps(request);
     } catch (urlError) {
-      console.log('URL parsing failed, using curl');
+      
     }
     
     // Fall back to curl only if URL parsing fails
     try {
       const command = this.buildCurlCommand(request);
-      console.log('Executing command:', command);
+      
       
       let stdout = '';
       let stderr = '';
@@ -4199,9 +4199,9 @@ fetchButton?.addEventListener('click', async () => {
       currentProject?.id
     );
     
-    console.log('Original request:', request);
-    console.log('Current project:', currentProject);
-    console.log('Original query params:', request.queryParams);
+    
+    
+    
     
     const processedRequest = { ...request };
     
@@ -4215,8 +4215,8 @@ fetchButton?.addEventListener('click', async () => {
       value: replaceVariables(param.value, currentProject)
     }));
     
-    console.log('Processed query params:', processedRequest.queryParams);
-    console.log('Full processed request:', processedRequest);
+    
+    
     
     // Replace variables in headers
     processedRequest.headers = request.headers.map(header => ({

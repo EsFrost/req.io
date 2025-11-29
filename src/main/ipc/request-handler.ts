@@ -531,16 +531,16 @@ export class RequestHandler {
     // For all requests, use Node.js native client for better body parsing
     try {
       const url = new URL(request.url);
-      console.log('Using Node.js HTTP client');
+      
       return await this.executeWithNodeHttps(request);
     } catch (urlError) {
-      console.log('URL parsing failed, using curl');
+      
     }
     
     // Fall back to curl only if URL parsing fails
     try {
       const command = this.buildCurlCommand(request);
-      console.log('Executing command:', command);
+      
       
       let stdout = '';
       let stderr = '';

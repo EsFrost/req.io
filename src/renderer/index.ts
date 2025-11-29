@@ -917,9 +917,9 @@ fetchButton?.addEventListener('click', async () => {
       currentProject?.id
     );
     
-    console.log('Original request:', request);
-    console.log('Current project:', currentProject);
-    console.log('Original query params:', request.queryParams);
+    
+    
+    
     
     const processedRequest = { ...request };
     
@@ -933,8 +933,8 @@ fetchButton?.addEventListener('click', async () => {
       value: replaceVariables(param.value, currentProject)
     }));
     
-    console.log('Processed query params:', processedRequest.queryParams);
-    console.log('Full processed request:', processedRequest);
+    
+    
     
     // Replace variables in headers
     processedRequest.headers = request.headers.map(header => ({

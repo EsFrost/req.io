@@ -24,7 +24,3 @@
 ## Localization :
 
 - Try to add localization <- this should be after tab management
-
-## Problems :
-
-- Remove all console logs on code cleanup <- this should happen at the end
